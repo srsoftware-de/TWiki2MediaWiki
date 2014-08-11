@@ -46,7 +46,7 @@
                   'header'  => "Authorization: Basic " . base64_encode($_SESSION['source']['user'].':'.$_SESSION['source']['password'])
                       )
           ));
-      return file_get_contents($url,false,$auth);
+      return file_get_contents($url,false,$auth).PHP_EOL.$url;
     } else {
       return file_get_contents($url);
     }
@@ -69,8 +69,8 @@
   }
 
   function show_revisions(){
-    $source=source_code('rdiff',false);
-    return '<pre>'.$source.'</pre>';
+    $source=source_code('rdiff');
+    return strip_tags($source);
     $parts=explode("rev=",$source);
     $current=true;
     $result='<ul>'.PHP_EOL;
