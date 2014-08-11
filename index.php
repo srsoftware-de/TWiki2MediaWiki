@@ -10,7 +10,7 @@
   $lowerright=add_session_closer();
   $upperright=display_session();
 
-  if (!isset($_SESSION['source_base'])) {
+  if (!isset($_SESSION['source'])) {
     $upperleft=ask_for_source();
   } else {
     $upperleft=display_source();
@@ -19,7 +19,7 @@
   if (!isset($_SESSION['destination_base'])){
     $lowerleft=ask_for_destination();
   } else {
-    $lowerleft=display_destination();
+    $lowerleft=display_source_code();
   }
 
 ?>

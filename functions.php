@@ -16,14 +16,37 @@
   }
 
   function display_source(){
-    return '<iframe src="'.$_SESSION['source_base'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
+    return '<iframe src="'.$_SESSION['source']['url'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
   }
 
   function display_source_code(){
-    if (isset($_SESSION['source_auth'])){
-      return file_get_contents($_SESSION['source_base'],false,$_SESSION['source_auth']);
+    $full_code=source_code();
+    $pos=strpos($full_code,'textarea');
+    if ($pos){
+      $pos=strpos($full_code,'>',$pos);
+      $part_code=substr($full_code,$pos+1);
+      $pos=strpos($part_code,'textarea');
+      if ($pos){
+        $result=substr($part_code,0,$pos-2);
+        return '<pre>'.$result.'</pre>';
+      }
+    }
+    return '<pre>'.$full_code.'</pre>';
+
+  }
+
+  function source_code(){
+    $url=$_SESSION['source']['url'];
+    $url=str_replace('view','edit',$url);
+    if (isset($_SESSION['source']['user'])){
+      $auth=stream_context_create(array(
+          'http' => array(
+                  'header'  => "Authorization: Basic " . base64_encode($_SESSION['source']['user'].':'.$_SESSION['source']['password'])
+                      )
+          ));
+      return file_get_contents($url,false,$auth);
     } else {
-      return file_get_contents($_SESSION['source_base']);
+      return file_get_contents($url);
     }
   }
 
