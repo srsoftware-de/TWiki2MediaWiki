@@ -7,6 +7,9 @@
   $lowerleft="";
   $lowerright="";
 
+  add_session_closer();
+  display_session();
+
   if (!isset($_SESSION['source_base'])) {
     ask_for_source();
   } else {
@@ -15,6 +18,8 @@
 
   if (!isset($_SESSION['destination_base'])){
     ask_for_destination();
+  } else {
+    display_destination();
   }
 
 ?>
