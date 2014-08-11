@@ -2,8 +2,15 @@
   include_once "init.php";
   include_once "functions.php";
 
+  $upperleft="";
+  $upperright="";
+  $lowerleft="";
+  $lowerright="";
+
   if (!isset($_SESSION['source_base'])) {
     ask_for_source();
+  } else {
+    display_source();
   }
 
   if (!isset($_SESSION['destination_base'])){

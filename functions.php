@@ -14,4 +14,9 @@
       <input type="submit"/>
     </form>';
   }
+
+  function display_source(){
+    global $upperleft;
+    $upperleft='<iframe src="'.$_SESSION['source_base'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
+  }
 ?>
