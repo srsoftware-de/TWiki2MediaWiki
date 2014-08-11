@@ -1,1 +1,23 @@
+*{
+  padding: 0;
+  margin: 0;
+}
 
+.half{
+  position: relative;
+  display: inline-block;
+  width: 49%;
+  height: 49%;
+}
+
+.upper{
+  border: 1px solid black;
+}
+
+.left{
+  background-color: lime;
+}
+
+.right{
+  background-color: cyan;
+}
