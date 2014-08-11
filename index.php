@@ -8,7 +8,7 @@
   $lowerright="";
 
   $lowerright=add_session_closer();
-  $upperright=display_session();
+  $lowerright.=display_session();
 
   if (!isset($_SESSION['source'])) {
     $upperleft=ask_for_source();
@@ -20,6 +20,10 @@
     $lowerleft=ask_for_destination();
   } else {
     $lowerleft=display_source_code();
+  }
+
+  if (isset($_SESSION['source'])){
+    $upperright=show_revisions();
   }
 
 ?>

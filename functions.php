@@ -20,7 +20,7 @@
   }
 
   function display_source_code(){
-    $full_code=source_code();
+    $full_code=source_code('edit');
     $pos=strpos($full_code,'textarea');
     if ($pos){
       $pos=strpos($full_code,'>',$pos);
@@ -35,10 +35,12 @@
 
   }
 
-  function source_code(){
+  function source_code($action=null,$use_aut=true){
     $url=$_SESSION['source']['url'];
-    $url=str_replace('view','edit',$url);
-    if (isset($_SESSION['source']['user'])){
+    if ($action!=null){
+      $url=str_replace('view',$action,$url);
+    }
+    if ($use_auth && isset($_SESSION['source']['user'])){
       $auth=stream_context_create(array(
           'http' => array(
                   'header'  => "Authorization: Basic " . base64_encode($_SESSION['source']['user'].':'.$_SESSION['source']['password'])
@@ -63,6 +65,24 @@
   function display_session(){
     $result='Session:<pre>'.print_r($_SESSION,true).'</pre>';
     $result.='POST:<pre>'.print_r($_POST,true).'</pre>';
+    return $result;
+  }
+
+  function show_revisions(){
+    $source=source_code('rdiff',false);
+    return '<pre>'.$source.'</pre>';
+    $parts=explode("rev=",$source);
+    $current=true;
+    $result='<ul>'.PHP_EOL;
+    foreach ($parts as $part){
+      if (!$current){
+        $current=false;
+        $pos=str_pos('"',$part);
+        $part=substr($part,0,$pos-1);
+        $result.='<li>'.$part.'</li>'.PHP_EOL;
+      }
+    }
+    $result.='</ul>'.PHP_EOL;
     return $result;
   }
 ?>
