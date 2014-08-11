@@ -7,19 +7,19 @@
   $lowerleft="";
   $lowerright="";
 
-  add_session_closer();
-  display_session();
+  $lowerright=add_session_closer();
+  $upperright=display_session();
 
   if (!isset($_SESSION['source_base'])) {
-    ask_for_source();
+    $upperleft=ask_for_source();
   } else {
-    display_source();
+    $upperleft=display_source();
   }
 
   if (!isset($_SESSION['destination_base'])){
-    ask_for_destination();
+    $lowerleft=ask_for_destination();
   } else {
-    display_destination();
+    $lowerleft=display_destination();
   }
 
 ?>
