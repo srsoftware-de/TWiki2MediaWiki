@@ -2,7 +2,9 @@
   function ask_for_source(){
     global $upperleft;
     $upperleft='<form method="POST" action=".">
-      <input type="text" name="sourcewiki" /> Quell-Wiki (TWiki)
+      <input type="text" name="source[url]" /> Quell-Wiki (TWiki)<br/>
+      <input type="text" name="source[user]" />Benutzername (optional)<br/>
+      <input type="password" name="source[password]"/>Passwort (optional)<br/>
       <input type="submit"/>
     </form>';  
   }
@@ -17,7 +19,11 @@
 
   function display_source(){
     global $upperleft;
-    $upperleft='<iframe src="'.$_SESSION['source_base'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
+    if (isset($_SESSION['source_auth'])){
+      $upperleft=file_get_contents($_SESSION['source_base'],false,$_SESSION['source_auth']);
+    } else {
+      $upperleft=file_get_contents($_SESSION['source_base']);
+    }
   }
 
   function display_destination(){
