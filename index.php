@@ -1,4 +1,11 @@
+<?php
+  include_once init.php;
 
+  if (!isset($_SESSION['target_base'])) {
+
+  }
+
+?>
 
 
 <html>
@@ -7,8 +14,8 @@
 <head>
 </head>
 <body>
-  <div class="upper left half"></div>
-  <div class="upper right half"></div>
-  <div class="lower left half"></div>
-  <div class="lower right half"></div>
+  <div class="upper left half"><?php print $upperleft;?></div>
+  <div class="upper right half"><?php print $upperright; ?></div>
+  <div class="lower left half"><?php print $lowerleft; ?></div>
+  <div class="lower right half"><?php print $lowerright; ?></div>
 </body>
