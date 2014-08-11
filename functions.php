@@ -3,6 +3,7 @@
     global $upperleft;
     $upperleft='<form method="POST" action=".">
       <input type="text" name="sourcewiki" /> Quell-Wiki (TWiki)
+      <input type="submit"/>
     </form>';  
   }
 
@@ -10,6 +11,7 @@
     global $lowerleft;
     $lowerleft='<form method="POST" action=".">
       <input type="text" name="destinationwiki" /> Ziel-Wiki (Mediawiki)
+      <input type="submit"/>
     </form>';
   }
 ?>
