@@ -24,6 +24,7 @@
 
   if (isset($_SESSION['source'])){
     $upperright=show_revisions();
+    $upperright.=show_links();
   }
 
 ?>

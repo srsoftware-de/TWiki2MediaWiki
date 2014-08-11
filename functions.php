@@ -35,16 +35,15 @@
 
   }
 
-  function source_code($action=null,$use_aut=true){
+  function source_code($action=null,$use_auth=true){
     $url=$_SESSION['source']['url'];
     if ($action!=null){
       $url=str_replace('view',$action,$url);
     }
     if ($use_auth && isset($_SESSION['source']['user'])){
+      $header='Authorization: Basic '.base64_encode($_SESSION['source']['user'].':'.$_SESSION['source']['password']).PHP_EOL.'Cookie: '.$_SESSION['source']['cookies']['cookie'][0];
       $auth=stream_context_create(array(
-          'http' => array(
-                  'header'  => "Authorization: Basic " . base64_encode($_SESSION['source']['user'].':'.$_SESSION['source']['password'])
-                      )
+          'http' => array('header'  => $header )
           ));
       return file_get_contents($url,false,$auth).PHP_EOL.$url;
     } else {
@@ -70,19 +69,21 @@
 
   function show_revisions(){
     $source=source_code('rdiff');
-    return strip_tags($source);
     $parts=explode("rev=",$source);
     $current=true;
-    $result='<ul>'.PHP_EOL;
+    $result='<div class="flowleft"><ul>'.PHP_EOL;
     foreach ($parts as $part){
       if (!$current){
-        $current=false;
-        $pos=str_pos('"',$part);
-        $part=substr($part,0,$pos-1);
+        $pos=strpos($part,'"');
+        $part=substr($part,0,$pos);
         $result.='<li>'.$part.'</li>'.PHP_EOL;
+        if ($part=='r1.1'){
+          break;
+        }
       }
+      $current=false;
     }
-    $result.='</ul>'.PHP_EOL;
+    $result.='</ul></div>'.PHP_EOL;
     return $result;
   }
 ?>

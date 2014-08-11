@@ -7,15 +7,22 @@
 
   if (isset($_POST['source'])){
     $_SESSION['source']=$_POST['source'];
-    $ckfile = tempnam ("/tmp", "CURLCOOKIE");
-    echo $_SESSION['source']['url'];
-    $ch = curl_init ($_SESSION['source']['url']);
-    curl_setopt($ch, CURLOPT_COOKIEJAR, $ckfile);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $_SESSION['source']['url']);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
+    curl_setopt($ch, CURLOPT_HEADER  ,1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($ch, CURLOPT_USERPWD, $_SESSION['source']['user'] . ":" . $_SESSION['source']['password']);
-    $output = curl_exec($ch);
-    echo file_get_contents($ckfile);
-    die();
+    $content = curl_exec($ch);
+
+    // get cookies
+    $cookies = array();
+    preg_match_all('/Set-Cookie:(?<cookie>\s{0,}.*)$/im', $content, $cookies);
+    $_SESSION['source']['cookies']=$cookies;
   }
 
   if (isset($_POST['destinationwiki'])){
