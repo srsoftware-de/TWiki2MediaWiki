@@ -11,4 +11,11 @@
       return '<ul class="revisions">'.PHP_EOL.$result.'</ul>'.PHP_EOL;
     }
   }
+
+  function show_submit_form($code){
+    $result='<form action='.' method="POST" class="submission">'.PHP_EOL;
+    $result.='<textarea name="submission">'.$code.'</textarea>'.PHP_EOL;
+    $result.='<input type="submit"></form>'.PHP_EOL;
+    return $result;
+  }
 ?>

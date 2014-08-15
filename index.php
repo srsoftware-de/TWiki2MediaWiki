@@ -32,7 +32,7 @@
     $revision_code=get_twiki_code($_SESSION['current']['namespace'],$_SESSION['current']['page'],$revision);
     $top='<pre>'.$revision_code.'</pre>';
     $media_wiki_code=convert_t2m($revision_code);
-    $bottom='<pre>'.$media_wiki_code.'</pre>';
+    $bottom=show_submit_form($media_wiki_code);
   }
 
 //else {

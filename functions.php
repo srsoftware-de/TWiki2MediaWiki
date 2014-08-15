@@ -26,14 +26,14 @@
     }
     $full_code=source_code($url,true);
     $pos=strpos($full_code,'textarea');
-    $result= $url.PHP_EOL.$full_code;
+    $result= $full_code;
     if ($pos){
       $pos=strpos($full_code,'>',$pos);
       $part_code=substr($full_code,$pos+1);
       $pos=strpos($part_code,'textarea');
       if ($pos){
         $result=substr($part_code,0,$pos-2);
-        $result=$url.PHP_EOL.$result;
+        $result=$result;
       }
     }
     return $result;
@@ -107,7 +107,7 @@
           }
         }
         if ($camel){
-          $map[$word]='[['.$word.']]';
+          $map[$word]='[['.$_SESSION['current']['namespace'].':'.$word.']]';
         }
       }
     }
@@ -133,6 +133,10 @@
   }
 
   function convert_t2m($source){
+    $replace=array('&#037;'=>'%',
+    '%WIKITOOLNAME%'=>'TWiki',
+    '%WEB%'=>'[['.$_SESSION['current']['namespace'].']]');
+    $source=str_replace(array_keys($replace),$replace,$source);
     $camelCaseLinks=read_camel_links($source);
     $altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
     $altered_source=replace_headings($altered_source);
