@@ -26,17 +26,17 @@
     }
     $full_code=source_code($url,true);
     $pos=strpos($full_code,'textarea');
+    $result= $url.PHP_EOL.$full_code;
     if ($pos){
       $pos=strpos($full_code,'>',$pos);
       $part_code=substr($full_code,$pos+1);
       $pos=strpos($part_code,'textarea');
       if ($pos){
         $result=substr($part_code,0,$pos-2);
-        return $url.PHP_EOL.$result;
+        $result=$url.PHP_EOL.$result;
       }
     }
-    return $url.PHP_EOL.$full_code;
-
+    return $result;
   }
 
   /* fetches a page by url, replaces the "view" part by the action token, if given */
@@ -132,12 +132,11 @@
     return implode("\n",$lines);
   }
 
-  function convert_source(){
-    $source=get_wiki_code();
+  function convert_t2m($source){
     $camelCaseLinks=read_camel_links($source);
     $altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
     $altered_source=replace_headings($altered_source);
-    return '<pre>'.print_r($altered_source,true).'</pre>';
+    return $altered_source;
   }
 
   function show_links_open(){
