@@ -19,7 +19,7 @@
     return '<iframe src="'.$_SESSION['source']['url'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
   }
 
-  function display_source_code(){
+  function get_wiki_code(){
     $full_code=source_code('edit');
     $pos=strpos($full_code,'textarea');
     if ($pos){
@@ -28,13 +28,14 @@
       $pos=strpos($part_code,'textarea');
       if ($pos){
         $result=substr($part_code,0,$pos-2);
-        return '<pre>'.$result.'</pre>';
+        return $result;
       }
     }
-    return '<pre>'.$full_code.'</pre>';
+    return $full_code;
 
   }
 
+  /* fetches a page by url, replaces the "view" part by the action token, if given */
   function source_code($action=null,$use_auth=true){
     $url=$_SESSION['source']['url'];
     if ($action!=null){
@@ -67,6 +68,7 @@
     return $result;
   }
 
+  /* parses the revision diff site for old revision numbers */
   function show_revisions(){
     $source=source_code('rdiff');
     $parts=explode("rev=",$source);
@@ -85,5 +87,36 @@
     }
     $result.='</ul></div>'.PHP_EOL;
     return $result;
+  }
+
+  function read_links($wikisource){
+    $alphanumeric=preg_replace("/[^A-Za-z0-9 ]/", ' ', $wikisource);
+    $word_source=str_replace(array("\r\n","\r","\n"),' ',$alphanumeric);
+    $words=explode(' ',$word_source);
+    $map=array();
+    foreach ($words as $word){
+      $camel=False;
+      $len=strlen($word);
+      if ($len>1){
+        $lc=strtolower($word);
+        for ($i=1; $i<$len; $i++){
+          if ($word[$i]!=$lc[$i]){
+            $camel=True;
+            break;
+          }
+        }
+        if ($camel){
+          $map[$word]='[['.$word.']]';
+        }
+      }
+    }
+    return $map;
+  }
+
+  function show_links(){
+    $source=get_wiki_code();
+    $links=read_links($source);
+    $altered_source=str_replace(array_keys($links),$links,$source);
+    return '<pre>'.print_r($altered_source,true).'</pre>';
   }
 ?>

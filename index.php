@@ -19,7 +19,7 @@
   if (!isset($_SESSION['destination_base'])){
     $lowerleft=ask_for_destination();
   } else {
-    $lowerleft=display_source_code();
+    $lowerleft='<pre>'.get_wiki_code().'</pre>';
   }
 
   if (isset($_SESSION['source'])){
