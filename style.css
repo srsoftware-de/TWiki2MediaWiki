@@ -28,7 +28,6 @@ pre {
   position: absolute;
   left: 0;
   width: 200px;
-  background-color: lime;
   min-height: 100px;
 }
 
@@ -39,6 +38,7 @@ pre {
   overflow: auto;
   height: 50%;
   top: 0;
+  border: 1px solid black;
 }
 
 .bottom{
@@ -55,7 +55,6 @@ pre {
   right: 0;
   width: 100px;
   min-height: 100px;
-  background-color: lime;
 }
 
 .session_closer{

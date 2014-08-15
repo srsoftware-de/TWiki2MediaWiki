@@ -29,7 +29,8 @@
 
   if (isset($_POST['revision'])){
     $revision=$_POST['revision'];
-    $top=$revision;
+    $top=get_twiki_code($_SESSION['current']['namespace'],$_SESSION['current']['page'],$revision);
+    $top='<pre>'.$top.'</pre>';
   }
 
 //else {

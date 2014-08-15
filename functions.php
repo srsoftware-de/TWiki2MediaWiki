@@ -19,8 +19,12 @@
     return '<iframe src="'.$_SESSION['source']['url'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
   }
 
-  function get_wiki_code(){
-    $full_code=source_code('edit');
+  function get_twiki_code($namespace,$page,$revision=null){
+    $url=$_SESSION['source']['url'].'/'.$namespace.'/'.$page.'?raw=on';
+    if ($revision!=null){
+      $url.='&rev='.$revision;
+    }
+    $full_code=source_code($url,true);
     $pos=strpos($full_code,'textarea');
     if ($pos){
       $pos=strpos($full_code,'>',$pos);
@@ -28,19 +32,15 @@
       $pos=strpos($part_code,'textarea');
       if ($pos){
         $result=substr($part_code,0,$pos-2);
-        return $result;
+        return $url.PHP_EOL.$result;
       }
     }
-    return $full_code;
+    return $url.PHP_EOL.$full_code;
 
   }
 
   /* fetches a page by url, replaces the "view" part by the action token, if given */
-  function source_code($action=null,$use_auth=true){
-    $url=$_SESSION['source']['url'];
-    if ($action!=null){
-      $url=str_replace('view',$action,$url);
-    }
+  function source_code($url,$use_auth=true){
     if ($use_auth && isset($_SESSION['source']['user'])){
       $header='Authorization: Basic '.base64_encode($_SESSION['source']['user'].':'.$_SESSION['source']['password']).PHP_EOL.'Cookie: '.$_SESSION['source']['cookies']['cookie'][0];
       $auth=stream_context_create(array(
@@ -70,7 +70,9 @@
 
   /* parses the revision diff site for old revision numbers */
   function read_revisions(){
-    $source=source_code('rdiff');
+    $url=$_SESSION['source']['url'].'/'.$_SESSION['current']['namespace'].'/'.$_SESSION['current']['page'];
+    $url=str_replace('view','rdiff',$url);
+    $source=source_code($url);
     $parts=explode("rev=",$source);
     $current=true;
     $result=array();
