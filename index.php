@@ -7,8 +7,8 @@
   $lowerleft="";
   $lowerright="";
 
-  $lowerright=add_session_closer();
-  $lowerright.=display_session();
+  $upperright=add_session_closer();
+  $upperright.=display_session();
 
   if (!isset($_SESSION['source'])) {
     $upperleft=ask_for_source();
@@ -23,8 +23,8 @@
   }
 
   if (isset($_SESSION['source'])){
-    $upperright=show_revisions();
-    $upperright.=show_links();
+    $upperright.=show_revisions();
+    $lowerright.=show_links();
   }
 
 ?>
