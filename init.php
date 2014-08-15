@@ -41,8 +41,8 @@
     $_SESSION['links_open'][$namespace][]=$link;
   }
 
-  if (isset($_POST['destinationwiki'])){
-    $_SESSION['destination_base']=$_POST['destinationwiki'];
+  if (isset($_POST['destination'])){
+    $_SESSION['destination']=$_POST['destination'];
   }
 
   if (isset($_POST['edit'])){

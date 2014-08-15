@@ -13,9 +13,27 @@
   }
 
   function show_submit_form($code){
-    $result='<form action='.' method="POST" class="submission">'.PHP_EOL;
+    $result='<form action="." method="POST" class="submission">'.PHP_EOL;
     $result.='<textarea name="submission">'.$code.'</textarea>'.PHP_EOL;
     $result.='<input type="submit"></form>'.PHP_EOL;
     return $result;
+  }
+
+  function ask_for_source(){
+    return '<form method="POST" action=".">
+      <input type="text" name="source[url]" /> Quell-Wiki (TWiki)<br/>
+      <input type="text" name="source[user]" />Benutzername (optional)<br/>
+      <input type="password" name="source[password]"/>Passwort (optional)<br/>
+      <input type="submit"/>
+    </form>';  
+  }
+
+  function ask_for_destination(){
+    return '<form method="POST" action=".">
+      <input type="text" name="destination[url]" /> Ziel-Wiki (Mediawiki)<br/>
+      <input type="text" name="destination[user]" />Benutzername (optional)<br/>
+      <input type="password" name="destination[password]"/>Passwort (optional)<br/>
+      <input type="submit"/>
+    </form>';
   }
 ?>

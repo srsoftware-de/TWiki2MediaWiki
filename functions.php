@@ -1,19 +1,4 @@
 <?php
-  function ask_for_source(){
-    return '<form method="POST" action=".">
-      <input type="text" name="source[url]" /> Quell-Wiki (TWiki)<br/>
-      <input type="text" name="source[user]" />Benutzername (optional)<br/>
-      <input type="password" name="source[password]"/>Passwort (optional)<br/>
-      <input type="submit"/>
-    </form>';  
-  }
-
-  function ask_for_destination(){
-    return '<form method="POST" action=".">
-      <input type="text" name="destinationwiki" /> Ziel-Wiki (Mediawiki)
-      <input type="submit"/>
-    </form>';
-  }
 
   function display_source(){
     return '<iframe src="'.$_SESSION['source']['url'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
@@ -53,7 +38,7 @@
   }
 
   function display_destination(){
-    return '<iframe src="'.$_SESSION['destination_base'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
+    return '<iframe src="'.$_SESSION['destination']['url'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
   }
 
   function add_session_closer(){
@@ -154,5 +139,26 @@
     }
     $result.='</ul></form>'.PHP_EOL;
     return $result;
+  }
+
+  function submit_content($content){
+
+    $data=array('wpTextbox1'=>$content,'wpSummary'=>'Content from TWiki','wpSave'=>'Save page','wpEditToken'=>'f23426ae4b0e8943a842ddeef13292b3+\\');
+    $postdata = http_build_query($data);
+
+    $ch = curl_init();
+    $url=$_SESSION['destination']['url'].'?action=submit&title='.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'];
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
+    curl_setopt($ch, CURLOPT_HEADER  ,1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_USERPWD, $_SESSION['destination']['user'] . ":" . $_SESSION['destination']['password']);
+    curl_setopt($ch, CURLOPT_POST,1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,$postdata);
+    $content = curl_exec($ch);
+    $content=curl_error($ch).PHP_EOL.$content;
+    return $content;
   }
 ?>

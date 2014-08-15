@@ -10,7 +10,7 @@
 
   $bottom.=display_session();
 
-  if (isset($_SESSION['destination_base'])){
+  if (isset($_SESSION['destination']['url'])){
     $left.=show_links_open();
   }
 
@@ -22,7 +22,7 @@
     $top=ask_for_source();
   } else {
     $left.=add_session_closer();
-    if (!isset($_SESSION['destination_base'])){
+    if (!isset($_SESSION['destination']['url'])){
       $top=ask_for_destination();
     }
   } 
@@ -33,6 +33,10 @@
     $top='<pre>'.$revision_code.'</pre>';
     $media_wiki_code=convert_t2m($revision_code);
     $bottom=show_submit_form($media_wiki_code);
+  }
+
+  if (isset($_POST['submission'])){
+    $bottom=submit_content($_POST['submission']);
   }
 
 //else {
