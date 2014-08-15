@@ -57,7 +57,7 @@
   }
 
   function add_session_closer(){
-    return '<form method="POST" action=".">
+    return '<form class="session_closer" method="POST" action=".">
       <input type="submit" name="closesession" value="neue Session" />
     </form>';
   }
@@ -89,7 +89,7 @@
     return $result;
   }
 
-  function read_links($wikisource){
+  function read_camel_links($wikisource){
     $alphanumeric=preg_replace("/[^A-Za-z0-9 ]/", ' ', $wikisource);
     $word_source=str_replace(array("\r\n","\r","\n"),' ',$alphanumeric);
     $words=explode(' ',$word_source);
@@ -113,10 +113,29 @@
     return $map;
   }
 
-  function show_links(){
+  function replace_headings($source){
+    $lines=explode("\n",$source);
+    for ($i=0; $i<count($lines); $i++){
+      $line=trim($lines[$i]);
+      if (strpos($line,'---')==0){ // line starts with three dashes
+        $line=ltrim($line,'-'); // remove dashes from beginning of line
+        $delim="";
+        while (strpos($line,'+')===0){ // count heading depth
+          $delim.='=';
+          $line=substr($line,1);
+        }
+        $line=$delim.' '.trim($line).' '.$delim; // actually add mediawiki tags
+        $lines[$i]=$line;
+      }
+    }
+    return implode("\n",$lines);
+  }
+
+  function convert_source(){
     $source=get_wiki_code();
-    $links=read_links($source);
-    $altered_source=str_replace(array_keys($links),$links,$source);
+    $camelCaseLinks=read_camel_links($source);
+    $altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
+    $altered_source=replace_headings($altered_source);
     return '<pre>'.print_r($altered_source,true).'</pre>';
   }
 ?>

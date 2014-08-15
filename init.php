@@ -4,6 +4,13 @@
     session_destroy();
   } 
 
+  if (!isset($_SESSION['links_open'])){
+    $_SESSION['links_open']=array();
+  }
+
+  if (!isset($_SESSION['links_done'])){
+    $_SESSION['links_done']=array();
+  }
 
   if (isset($_POST['source'])){
     $_SESSION['source']=$_POST['source'];
@@ -23,6 +30,14 @@
     $cookies = array();
     preg_match_all('/Set-Cookie:(?<cookie>\s{0,}.*)$/im', $content, $cookies);
     $_SESSION['source']['cookies']=$cookies;
+    $url=$_SESSION['source']['url'];
+    $namespace=basename(dirname($url));
+    $link=basename($url);
+    $_SESSION['source']['url']=dirname(dirname($url)); // this is rather bad and only works, with you start with http://server.com/path/to/wiki/namespace/some_page
+    if (!isset($_SESSION['links_open']['namespace'])){
+      $_SESSION['links_open'][$namespace]=array();
+    }
+    $_SESSION['links_open'][$namespace][]=$link;
   }
 
   if (isset($_POST['destinationwiki'])){
