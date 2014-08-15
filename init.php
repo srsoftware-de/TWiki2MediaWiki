@@ -44,4 +44,9 @@
     $_SESSION['destination_base']=$_POST['destinationwiki'];
   }
 
+  if (isset($_POST['edit'])){
+    $_SESSION['current_namespace']=dirname($_POST['edit']);
+    $_SESSION['current_page']=basename($_POST['edit']);
+  }
+
 ?>

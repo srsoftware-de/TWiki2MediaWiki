@@ -9,6 +9,10 @@
 
 //  $upperright=add_session_closer();
   $bottom.=display_session();
+  
+  if (isset($_SESSION['links_open'])){
+    $left.=show_links_open();
+  }
 
   if (!isset($_SESSION['source'])) {
     $top=ask_for_source();
