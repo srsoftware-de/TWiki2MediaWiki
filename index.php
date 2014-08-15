@@ -1,17 +1,21 @@
 <?php
   include_once "init.php";
   include_once "functions.php";
+  include_once "display_functions.php";
 
   $left="";
   $right="";
   $top="";
   $bottom="";
 
-//  $upperright=add_session_closer();
   $bottom.=display_session();
-  
-  if (isset($_SESSION['links_open'])){
+
+  if (isset($_SESSION['destination_base'])){
     $left.=show_links_open();
+  }
+
+  if (isset($_SESSION['current']['revisions'])){
+    $right.=show_revisions();
   }
 
   if (!isset($_SESSION['source'])) {
@@ -22,6 +26,11 @@
       $top=ask_for_destination();
     }
   } 
+
+  if (isset($_POST['revision'])){
+    $revision=$_POST['revision'];
+    $top=$revision;
+  }
 
 //else {
 //    $upperleft=display_source();

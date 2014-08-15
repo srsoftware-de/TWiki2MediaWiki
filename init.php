@@ -1,4 +1,5 @@
 <?php
+  include_once 'functions.php';
   session_start();
   if (isset($_POST['closesession'])){
     session_destroy();
@@ -45,8 +46,13 @@
   }
 
   if (isset($_POST['edit'])){
-    $_SESSION['current_namespace']=dirname($_POST['edit']);
-    $_SESSION['current_page']=basename($_POST['edit']);
+    $_SESSION['current']=array();
+    $_SESSION['current']['namespace']=dirname($_POST['edit']);
+    $_SESSION['current']['page']=basename($_POST['edit']);
+    $_SESSION['current']['revisions']=read_revisions();
   }
 
+  if (isset($_POST['revision'])){
+    array_pop($_SESSION['current']['revisions']);
+  }
 ?>

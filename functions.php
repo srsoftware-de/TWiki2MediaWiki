@@ -69,23 +69,22 @@
   }
 
   /* parses the revision diff site for old revision numbers */
-  function show_revisions(){
+  function read_revisions(){
     $source=source_code('rdiff');
     $parts=explode("rev=",$source);
     $current=true;
-    $result='<div class="flowleft"><ul>'.PHP_EOL;
+    $result=array();
     foreach ($parts as $part){
       if (!$current){
         $pos=strpos($part,'"');
         $part=substr($part,0,$pos);
-        $result.='<li>'.$part.'</li>'.PHP_EOL;
+        $result[]=$part;
         if ($part=='r1.1'){
           break;
         }
       }
       $current=false;
     }
-    $result.='</ul></div>'.PHP_EOL;
     return $result;
   }
 

@@ -3,6 +3,10 @@
   margin: 0;
 }
 
+ul{
+  list-style-position: inside;
+}
+
 iframe{
   width: 100%;
   height: 100%;
@@ -23,14 +27,14 @@ pre {
 .left{
   position: absolute;
   left: 0;
-  width: 100px;
+  width: 200px;
   background-color: lime;
   min-height: 100px;
 }
 
 .top{
   position: absolute;
-  left: 100px;
+  left: 200px;
   right: 100px;
   overflow: auto;
   height: 50%;
@@ -39,7 +43,7 @@ pre {
 
 .bottom{
   position: absolute;
-  left: 100px;
+  left: 200px;
   right: 100px;
   overflow: auto;
   height: 50%;
