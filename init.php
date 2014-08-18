@@ -14,9 +14,10 @@
   }
 
   if (isset($_POST['source'])){
+    /* store source variables */
     $_SESSION['source']=$_POST['source'];
 
-
+    /* prepare to recieve cookie from source wiki */
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $_SESSION['source']['url']);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
@@ -27,7 +28,7 @@
     curl_setopt($ch, CURLOPT_USERPWD, $_SESSION['source']['user'] . ":" . $_SESSION['source']['password']);
     $content = curl_exec($ch);
 
-    // get cookies
+    // actually recieve cookies
     $cookies = array();
     preg_match_all('/Set-Cookie:(?<cookie>\s{0,}.*)$/im', $content, $cookies);
     $_SESSION['source']['cookies']=$cookies;
@@ -40,9 +41,56 @@
     }
     $_SESSION['links_open'][$namespace][]=$link;
   }
-
+  
   if (isset($_POST['destination'])){
+    /* store destination variables */
     $_SESSION['destination']=$_POST['destination'];
+    $_SESSION['destination']['cookies']=tempnam('/tmp','mediawiki');
+
+    /* recive login token from wiki login page */
+
+    $ch=curl_init();
+    curl_setopt($ch, CURLOPT_URL, $_SESSION['destination']['url'].'?title=Special:UserLogin');
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
+    curl_setopt($ch, CURLOPT_HEADER  ,1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $_SESSION['destination']['cookies']);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $_SESSION['destination']['cookies']);
+
+    $content = curl_exec($ch);
+
+    $content=explode("\n",$content);
+    foreach ($content as $line){
+      if (strpos($line,'wpLoginToken')>0){
+        $start=strpos($line,'value="')+7;
+        $end=strpos($line,'"',$start);
+        $token=substr($line,$start,$end-$start);
+        break;
+      }
+    }
+
+    $data=array('wpName'=>$_SESSION['destination']['user'],
+                'wpPassword'=>$_SESSION['destination']['password'],
+                'wpRemember'=>'1',
+                'wpLoginToken'=>$token);
+    $postdata = http_build_query($data);
+
+    /* recieve cookie from destination wiki */
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $_SESSION['destination']['url'].'?title=Special:UserLogin&action=submitlogin&type=login');
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
+    curl_setopt($ch, CURLOPT_HEADER  ,1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_USERPWD, $_SESSION['destination']['user'] . ":" . $_SESSION['destination']['password']);
+    curl_setopt($ch, CURLOPT_POST,1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,$postdata);
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $_SESSION['destination']['cookies']);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $_SESSION['destination']['cookies']);
+    curl_exec($ch);
   }
 
   if (isset($_POST['edit'])){
