@@ -103,7 +103,7 @@
     $lines=explode("\n",$source);
     for ($i=0; $i<count($lines); $i++){
       $line=trim($lines[$i]);
-      if (strpos($line,'---')==0){ // line starts with three dashes
+      if (strpos($line,'---')===0){ // line starts with three dashes
         $line=ltrim($line,'-'); // remove dashes from beginning of line
         $delim="";
         while (strpos($line,'+')===0){ // count heading depth
@@ -117,14 +117,32 @@
     return implode("\n",$lines);
   }
 
+  function replace_lists($source){
+    $lines=explode("\n",$source);
+    $new_lines=array();
+    foreach ($lines as $line){
+      $line=rtrim($line);
+      if (strpos($line,'   * ')===0){
+        $line=substr($line,3);
+      }
+      if ((trim($line)=='') && (strpos(end($new_lines),'* ')===0)){
+        // current line is empty, last line was an item, so empty line needs to be skipped
+      } else {
+        $new_lines[]=$line;
+      }
+    }
+    return implode("\n",$new_lines);
+  }
+
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
-    '%WIKITOOLNAME%'=>'TWiki',
-    '%WEB%'=>'[['.$_SESSION['current']['namespace'].']]');
+                   '%WIKITOOLNAME%'=>'TWiki',
+                   '%WEB%'=>'[['.$_SESSION['current']['namespace'].']]');
     $source=str_replace(array_keys($replace),$replace,$source);
-    $camelCaseLinks=read_camel_links($source);
+    $camelCaseLinks=read_camel_links($source);    
     $altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
     $altered_source=replace_headings($altered_source);
+    $altered_source=replace_lists($altered_source);
     return $altered_source;
   }
 
