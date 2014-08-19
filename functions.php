@@ -141,12 +141,68 @@
     return $result;
   }
 
+  function getInputs($wiki,$form){
+    $url=$wiki['url'].$form;
+    $ch=curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
+    curl_setopt($ch, CURLOPT_HEADER  ,1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+    curl_setopt($ch, CURLOPT_USERPWD, $wiki['user'] . ":" . $wiki['password']);
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $wiki['cookies']);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $wiki['cookies']);
+    $content = curl_exec($ch);
+
+    $inputs=array();
+    
+    /* search for regular inputs */
+
+    $key='<input';
+    $pos=strpos($content,$key);
+    while ($pos !== false){
+      $name_start=strpos($content,'name="',$pos)+6;
+      $name_end=strpos($content,'"',$name_start);
+
+      $value_start=strpos($content,'value="',$pos)+7;
+      $value_end=strpos($content,'"',$value_start);
+      
+      $name=substr($content,$name_start,$name_end-$name_start);
+      $value=substr($content,$value_start,$value_end-$value_start);
+
+      $inputs[$name]=$value;
+
+      $pos=strpos($content,$key,$pos+1);
+    }
+
+    /* search for textareas */
+    
+    $key='<textarea';
+    $pos=strpos($content,$key);
+    while ($pos !== false){
+      $name_start=strpos($content,'name="',$pos)+6;
+      $name_end=strpos($content,'"',$name_start);
+      $name=substr($content,$name_start,$name_end-$name_start);
+      $inputs[$name]='';
+      $pos=strpos($content,$key,$pos+1);
+    }
+    
+    return $inputs;
+  }
+
   function submit_content($content){
+
+    $inputs=getInputs($_SESSION['destination'],'?action=submit&title='.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page']); 
 
     $data=array('wpTextbox1'=>$content,
                 'wpSummary'=>'Content from TWiki',
                 'wpSave'=>'Save page',
-                'wpEdittime'=>date('Ymdhi'));
+                'wpEdittime'=>date('Ymdhi'),
+                'wpStarttime'=>date('Ymdhi'),
+                'format'=>'text/x-wiki',
+                'model'=>'wikitext',
+                'oldid'=>'0',
+                'wpAutoSummary'=>'d41d8cd98f00b204e9800998ecf8427e');
     print_r($data);
 //    die();
     $postdata = http_build_query($data);
