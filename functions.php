@@ -143,6 +143,7 @@
     $altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
     $altered_source=replace_headings($altered_source);
     $altered_source=replace_lists($altered_source);
+    $altered_source.="\n".'[[Category:'.$_SESSION['current']['namespace'].']]';
     return $altered_source;
   }
 
