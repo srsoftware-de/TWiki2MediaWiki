@@ -5,6 +5,7 @@
       $link=str_replace('/',':',$link);
       $parts=explode(':',$link);
       if (count($parts)>2){
+        return;
         die('Link "'.$link.'" enthält mehr als 2 Teile!?');
       }
       if (count($parts)>1){
@@ -227,6 +228,20 @@
     
   }
 
+  function  replace_includes($source){
+    $key='%INCLUDE{';
+    $pos=strpos($source,$key);
+    while ($pos!==false){
+      $end=strpos($source,'}%',$pos)+2;
+      $link=substr($source,$pos+9,$end-$pos-11);
+      $link=trim($link,'"');
+      addLink($link);
+      $source=substr($source,0,$pos).'{{:'.$link.'}}'.substr($source,$end);
+      $pos=strpos($source,$key);
+    }
+    return $source;
+  }
+
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
                    '%WIKITOOLNAME%'=>'[[TWiki]]',
@@ -239,6 +254,7 @@
     $altered_source=replace_headings($altered_source);
     $altered_source=replace_lists($altered_source);
     $altered_source=replace_formats($altered_source);
+    $altered_source=replace_includes($altered_source);
 //    $altered_source=cleanup($altered_source);
     $altered_source.="\n".'[[Category:'.$_SESSION['current']['namespace'].']]';
     return $altered_source;
