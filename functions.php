@@ -105,6 +105,7 @@
 
   function read_camel_links($wikisource){
     $nolinks=preg_replace("/\[(.*?)\]/",'',$wikisource); // ignore links in square brackets
+    $nolinks=preg_replace("/\{(.*?)\}/",'',$nolinks);
     $alphanumeric=preg_replace("/[^A-Za-z0-9 ]/", ' ', $nolinks); 
     $word_source=str_replace(array("\r\n","\r","\n"),' ',$alphanumeric);
     $words=explode(' ',$word_source);
@@ -178,7 +179,7 @@
       $original_link=substr($source,$pos,$end-$pos);
       $mid_pos=strpos($original_link,'][');
       if ($mid_pos!==false){
-        if (strpos($original_link,'://')!==false){
+        if (strpos($original_link,':/')!==false){
           $new_link=str_replace('][',' ',$original_link);
           $new_link=substr($new_link,1,-1);
         } else {
@@ -220,7 +221,8 @@
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
                    '%WIKITOOLNAME%'=>'[[TWiki]]',
-                   '%WEB%'=>'[[Category:'.$_SESSION['current']['namespace'].']]');
+                   '%TWIKIWEB%.'=>'TWiki:',
+                   '%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].']]');
     $source=str_replace(array_keys($replace),$replace,$source);
     $source=replace_weblinks($source);
     $camelCaseLinks=read_camel_links($source);    
