@@ -161,9 +161,13 @@
         continue;
       }
       $line=rtrim($line);
-      if (strpos($line,'   * ')===0){
+      if (strpos($line,'   * ')===0){ 
         $line=substr($line,3);
       }
+      if (strpos($line,'      * ')===0){
+        $line='*'.substr($line,6);
+      }
+      
       if ((trim($line)=='') && (strpos(end($new_lines),'* ')===0)){
         // current line is empty, last line was an item, so empty line needs to be skipped
       } else {
@@ -220,8 +224,8 @@
   }
 
   function replace_formats($source){
-    $source=preg_replace("/\*(\S)/","'''$1",$source); // * followed by non-white-space
-    $source=preg_replace("/(\S)\*/","$1'''",$source); // non-white-space followed by *
+    $source=preg_replace("/\*([^\s*])/","'''$1",$source); // * followed by non-white-space
+    $source=preg_replace("/([^\s*])\*/","$1'''",$source); // non-white-space followed by *
 //    $source=preg_replace("/_([^ ])/","''$1",$source);
 //    $source=preg_replace("/([^ ])_/","$1'''",$source);
     return $source;
