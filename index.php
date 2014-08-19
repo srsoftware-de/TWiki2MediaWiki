@@ -10,23 +10,6 @@
 
   $bottom.=display_session();
 
-  if (isset($_SESSION['destination']['url'])){
-    $left.=show_links_open();
-  }
-
-  if (isset($_SESSION['current']['revisions'])){
-    $right.=show_revisions();
-  }
-
-  if (!isset($_SESSION['source'])) {
-    $top=ask_for_source();
-  } else {
-    $left.=add_session_closer();
-    if (!isset($_SESSION['destination']['url'])){
-      $top=ask_for_destination();
-    }
-  } 
-
   if (isset($_POST['revision'])){
     $_SESSION['current']['revision']=$_POST['revision'];
     $revision_code=get_twiki_code($_SESSION['current']['namespace'],$_SESSION['current']['page'],$_SESSION['current']['revision']);
@@ -44,6 +27,23 @@
     submit_content($_POST['submission']);
     $top='<iframe src="'.$_SESSION['destination']['url'].'/'.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'].'"></iframe>';
   }
+  if (isset($_SESSION['destination']['url'])){
+    $left.=show_links_open();
+  }
+
+  if (isset($_SESSION['current']['revisions'])){
+    $right.=show_revisions();
+  }
+
+  if (!isset($_SESSION['source'])) {
+    $top=ask_for_source();
+  } else {
+    $left.=add_session_closer();
+    if (!isset($_SESSION['destination']['url'])){
+      $top=ask_for_destination();
+    }
+  } 
+
 
 //else {
 //    $upperleft=display_source();
