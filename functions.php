@@ -218,6 +218,15 @@
     return $source;
   }
 
+  function replace_formats($source){
+    $source=preg_replace("/\*(\S)/","'''$1",$source); // * followed by non-white-space
+    $source=preg_replace("/(\S)\*/","$1'''",$source); // non-white-space followed by *
+//    $source=preg_replace("/_([^ ])/","''$1",$source);
+//    $source=preg_replace("/([^ ])_/","$1'''",$source);
+    return $source;
+    
+  }
+
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
                    '%WIKITOOLNAME%'=>'[[TWiki]]',
@@ -229,6 +238,7 @@
     $altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
     $altered_source=replace_headings($altered_source);
     $altered_source=replace_lists($altered_source);
+    $altered_source=replace_formats($altered_source);
 //    $altered_source=cleanup($altered_source);
     $altered_source.="\n".'[[Category:'.$_SESSION['current']['namespace'].']]';
     return $altered_source;
