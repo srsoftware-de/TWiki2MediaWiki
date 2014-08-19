@@ -94,9 +94,10 @@
   }
 
   if (isset($_POST['edit'])){
+    $parts=explode(':',$_POST['edit']);
     $_SESSION['current']=array();
-    $_SESSION['current']['namespace']=dirname($_POST['edit']);
-    $_SESSION['current']['page']=basename($_POST['edit']);
+    $_SESSION['current']['namespace']=$parts[0];
+    $_SESSION['current']['page']=$parts[1];
     $_SESSION['current']['revisions']=read_revisions();
   }
 

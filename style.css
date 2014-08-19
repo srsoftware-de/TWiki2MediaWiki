@@ -63,14 +63,12 @@ textarea{
   min-height: 100px;
 }
 
-.session_closer{
-  position: absolute;
-  bottom: 0;
-  left: 0;
-}
-
 .submission input{
   position: absolute;
   bottom: 0;
   right: 0;
+}
+
+.session_closer input{
+  background-color: yellow;
 }

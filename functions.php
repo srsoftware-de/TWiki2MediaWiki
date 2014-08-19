@@ -1,5 +1,33 @@
 <?php
 
+  function addLink($link,$namespace=NULL){
+    if ($namespace==NULL){
+      $link=str_replace('/',':',$link);
+      $parts=explode(':',$link);
+      if (count($parts)>2){
+        die('Link "'.$link.'" enthält mehr als 2 Teile!?');
+      }
+      if (count($parts)>1){
+        $namespace=$parts[0];
+        $link=$parts[1];
+      }
+    }
+
+    if (isset($_SESSION['links_done']) && isset($_SESSION['links_done'][$namespace]) && in_array($link,$_SESSION['links_done'][$namespace])){
+      // dieser Link wurde schon abgearbeitet
+    } else {
+      if (!isset($_SESSION['links_open'])){
+        $_SESSION['links_open']=array();
+      }
+      if (!isset($_SESSION['links_open'][$namespace])){
+        $_SESSION['links_open'][$namespace]=array();
+      }
+      if (!in_array($link,$_SESSION['links_open'][$namespace])){
+        $_SESSION['links_open'][$namespace][]=$link;
+      }
+    }
+  }
+
   function display_source(){
     return '<iframe src="'.$_SESSION['source']['url'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
   }
@@ -82,6 +110,9 @@
     $words=explode(' ',$word_source);
     $map=array();
     foreach ($words as $word){
+      if (strtoupper($word)==$word){
+        continue; // all uppercase = no camelcase
+      }
       $word=trim($word,'.');
       $camel=False;
       $len=strlen($word);
@@ -95,6 +126,7 @@
         }
         if ($camel){
           $map[$word]='[['.$_SESSION['current']['namespace'].':'.$word.'|'.$word.']]';
+          addLink($word,$_SESSION['current']['namespace']);
         }
       }
     }
@@ -151,11 +183,12 @@
           $new_link=substr($new_link,1,-1);
         } else {
           $original_link_dest=substr($original_link,0,$mid_pos);
-          $original_link_dest=str_replace('.',':',$original_link_dest);
+          $original_link_dest=str_replace('.',':',substr($original_link_dest,2));
           if (strpos($original_link_dest,':')===false){
-            $original_link_dest='[['.$_SESSION['current']['namespace'].':'.substr($original_link_dest,2);
+            $original_link_dest=$_SESSION['current']['namespace'].':'.$original_link_dest;
           }
           $original_link_text=substr($original_link,$mid_pos+2);
+          addLink($original_link_dest);
           $new_link=$original_link_dest.'|'.$original_link_text;
         }
         $source=substr($source,0,$pos) . $new_link . substr($source,$end);
@@ -178,8 +211,6 @@
       $end=strpos($source,']]',$insert_end)+2;
       $old_link=substr($source,$pos,$end-$pos);
       $new_link=substr($source,$pos+2,$insert_start-$pos-1).substr($source,$insert_end+1,$end-$insert_end-3);
-//      print $old_link."<br/>\n".$new_link;
-//      die();
       $source=substr($source,0,$pos).$new_link.substr($source,$end);
       $pos=strpos($source,'[[[[');
     }
@@ -188,8 +219,8 @@
 
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
-                   '%WIKITOOLNAME%'=>'TWiki',
-                   '%WEB%'=>'[['.$_SESSION['current']['namespace'].']]');
+                   '%WIKITOOLNAME%'=>'[[TWiki]]',
+                   '%WEB%'=>'[[Category:'.$_SESSION['current']['namespace'].']]');
     $source=str_replace(array_keys($replace),$replace,$source);
     $source=replace_weblinks($source);
     $camelCaseLinks=read_camel_links($source);    
@@ -201,18 +232,6 @@
     return $altered_source;
   }
 
-  function show_links_open(){
-    $result='<form class="editlink" method="POST" action="."><ul class="namespace">'.PHP_EOL;
-    foreach ($_SESSION['links_open'] as $namespace=>$links){
-      $result.='<li>'.$namespace.PHP_EOL.'<ul class="link">'.PHP_EOL;
-      foreach ($links as $link){
-        $result.='<li><input type="submit" name="edit" value="'.$namespace.'/'.$link.'"></input></li>'.PHP_EOL;
-      }
-      $result.='</ul>'.PHP_EOL.'</li>'.PHP_EOL;
-    }
-    $result.='</ul></form>'.PHP_EOL;
-    return $result;
-  }
 
   function getInputs($wiki,$form){
     $url=$wiki['url'].$form;

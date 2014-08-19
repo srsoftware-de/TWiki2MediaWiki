@@ -37,7 +37,7 @@
 
   if (isset($_POST['submission'])){
     submit_content($_POST['submission']);
-    $bottom='<iframe src="'.$_SESSION['destination']['url'].'/'.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'].'"></iframe>';
+    $top='<iframe src="'.$_SESSION['destination']['url'].'/'.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'].'"></iframe>';
   }
 
 //else {
