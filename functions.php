@@ -143,7 +143,12 @@
 
   function submit_content($content){
 
-    $data=array('wpTextbox1'=>$content,'wpSummary'=>'Content from TWiki','wpSave'=>'Save page','wpEditToken'=>'f23426ae4b0e8943a842ddeef13292b3+\\');
+    $data=array('wpTextbox1'=>$content,
+                'wpSummary'=>'Content from TWiki',
+                'wpSave'=>'Save page',
+                'wpEdittime'=>date('Ymdhi'));
+    print_r($data);
+//    die();
     $postdata = http_build_query($data);
 
     $ch = curl_init();
@@ -157,6 +162,8 @@
     curl_setopt($ch, CURLOPT_USERPWD, $_SESSION['destination']['user'] . ":" . $_SESSION['destination']['password']);
     curl_setopt($ch, CURLOPT_POST,1);
     curl_setopt($ch, CURLOPT_POSTFIELDS,$postdata);
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $_SESSION['destination']['cookies']);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $_SESSION['destination']['cookies']);
     $content = curl_exec($ch);
     $content=curl_error($ch).PHP_EOL.$content;
     return $content;
