@@ -28,15 +28,16 @@
   } 
 
   if (isset($_POST['revision'])){
-    $revision=$_POST['revision'];
-    $revision_code=get_twiki_code($_SESSION['current']['namespace'],$_SESSION['current']['page'],$revision);
+    $_SESSION['current']['revision']=$_POST['revision'];
+    $revision_code=get_twiki_code($_SESSION['current']['namespace'],$_SESSION['current']['page'],$_SESSION['current']['revision']);
     $top='<pre>'.$revision_code.'</pre>';
     $media_wiki_code=convert_t2m($revision_code);
     $bottom=show_submit_form($media_wiki_code);
   }
 
   if (isset($_POST['submission'])){
-    $bottom=submit_content($_POST['submission']);
+    submit_content($_POST['submission']);
+    $bottom='<iframe src="'.$_SESSION['destination']['url'].'/'.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'].'"></iframe>';
   }
 
 //else {

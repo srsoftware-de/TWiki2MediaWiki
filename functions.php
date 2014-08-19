@@ -167,6 +167,7 @@
       $value_start=strpos($content,'value="',$pos)+7;
       $value_end=strpos($content,'"',$value_start);
       
+      $value='';
       $name=substr($content,$name_start,$name_end-$name_start);
       $value=substr($content,$value_start,$value_end-$value_start);
 
@@ -192,19 +193,22 @@
 
   function submit_content($content){
 
-    $inputs=getInputs($_SESSION['destination'],'?action=submit&title='.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page']); 
+    /* use data from preset input fields */
+    $data=getInputs($_SESSION['destination'],'?action=submit&title='.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page']); 
 
-    $data=array('wpTextbox1'=>$content,
-                'wpSummary'=>'Content from TWiki',
-                'wpSave'=>'Save page',
-                'wpEdittime'=>date('Ymdhi'),
-                'wpStarttime'=>date('Ymdhi'),
-                'format'=>'text/x-wiki',
-                'model'=>'wikitext',
-                'oldid'=>'0',
-                'wpAutoSummary'=>'d41d8cd98f00b204e9800998ecf8427e');
-    print_r($data);
-//    die();
+    $data['wpTextbox1']=$content; // apply new content to textbox
+    $data['wpSummary']='Revision '.$_SESSION['current']['revision'];
+
+    /* omit some input fields that belong to unused buttons or search fields */
+    unset($data['wpMinoredit']);
+    unset($data['wpWatchthis']);
+    unset($data['wpPreview']);
+    unset($data['wpDiff']);
+    unset($data['search']);
+    unset($data['title']);
+    unset($data['fulltext']);
+    unset($data['go']);
+
     $postdata = http_build_query($data);
 
     $ch = curl_init();
