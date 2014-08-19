@@ -76,11 +76,13 @@
   }
 
   function read_camel_links($wikisource){
-    $alphanumeric=preg_replace("/[^A-Za-z0-9 ]/", ' ', $wikisource);
+    $nolinks=preg_replace("/\[(.*?)\]/",'',$wikisource); // ignore links in square brackets
+    $alphanumeric=preg_replace("/[^A-Za-z0-9 ]/", ' ', $nolinks); 
     $word_source=str_replace(array("\r\n","\r","\n"),' ',$alphanumeric);
     $words=explode(' ',$word_source);
     $map=array();
     foreach ($words as $word){
+      $word=trim($word,'.');
       $camel=False;
       $len=strlen($word);
       if ($len>1){
@@ -139,11 +141,18 @@
     while ($pos!==false){
       $end=strpos($source,']]',$pos)+2;
       $original_link=substr($source,$pos,$end-$pos);
-      if (strpos($original_link,'][')!==false){
+      $mid_pos=strpos($original_link,'][');
+      if ($mid_pos!==false){
         if (strpos($original_link,'://')!==false){
           $new_link=str_replace('][',' ',$original_link);
         } else {
-          $new_link=str_replace('][','|',$original_link);
+          $original_link_dest=substr($original_link,0,$mid_pos);
+          $original_link_dest=str_replace('.',':',$original_link_dest);
+          if (strpos($original_link_dest,':')===false){
+            $original_link_dest='[['.$_SESSION['current']['namespace'].':'.substr($original_link_dest,2);
+          }
+          $original_link_text=substr($original_link,$mid_pos+2);
+          $new_link=$original_link_dest.'|'.$original_link_text;
         }
         $source=substr($source,0,$pos) . $new_link . substr($source,$end);
       }
@@ -183,7 +192,7 @@
     $altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
     $altered_source=replace_headings($altered_source);
     $altered_source=replace_lists($altered_source);
-    $altered_source=cleanup($altered_source);
+//    $altered_source=cleanup($altered_source);
     $altered_source.="\n".'[[Category:'.$_SESSION['current']['namespace'].']]';
     return $altered_source;
   }
