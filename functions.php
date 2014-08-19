@@ -92,7 +92,7 @@
           }
         }
         if ($camel){
-          $map[$word]='[['.$_SESSION['current']['namespace'].':'.$word.']]';
+          $map[$word]='[['.$_SESSION['current']['namespace'].':'.$word.'|'.$word.']]';
         }
       }
     }
