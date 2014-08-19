@@ -24,7 +24,7 @@
     return $result;
   }
 
-  /* fetches a page by url, replaces the "view" part by the action token, if given */
+  /* fetches a page by url */
   function source_code($url,$use_auth=true){
     if ($use_auth && isset($_SESSION['source']['user'])){
       $header='Authorization: Basic '.base64_encode($_SESSION['source']['user'].':'.$_SESSION['source']['password']).PHP_EOL.'Cookie: '.$_SESSION['source']['cookies']['cookie'][0];
