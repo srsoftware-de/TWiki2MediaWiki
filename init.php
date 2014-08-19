@@ -103,5 +103,8 @@
 
   if (isset($_POST['revision'])){
     array_pop($_SESSION['current']['revisions']);
+    if (empty($_SESSION['current']['revisions'])){
+      pageDone();
+    }
   }
 ?>

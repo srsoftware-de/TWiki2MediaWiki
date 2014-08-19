@@ -1,5 +1,25 @@
 <?php
 
+  function pageDone(){
+    $namespace=$_SESSION['current']['namespace'];
+    $page=$_SESSION['current']['page'];
+    if (!isset($_SESSION['links_done'])){
+      $_SESSION['links_done']=array();
+    }
+    if (!isset($_SESSION['links_done'][$namespace])){
+      $_SESSION['links_done'][$namespace]=array();
+    }
+    if (!in_array($page,$_SESSION['links_done'][$namespace])){
+      $_SESSION['links_done'][$namespace][]=$page;
+    }
+    if(($key = array_search($page, $_SESSION['links_open'][$namespace])) !== false) {
+      unset($_SESSION['links_open'][$namespace][$key]);
+    }
+    if (empty($_SESSION['links_open'][$namespace])){
+      unset($_SESSION['links_open'][$namespace]);
+    }
+  }
+
   function addLink($link,$namespace=NULL){
     if ($namespace==NULL){
       $link=str_replace('/',':',$link);
@@ -87,6 +107,7 @@
     $url=$_SESSION['source']['url'].'/'.$_SESSION['current']['namespace'].'/'.$_SESSION['current']['page'];
     $url=str_replace('view','rdiff',$url);
     $source=source_code($url);
+
     $parts=explode("rev=",$source);
     $current=true;
     $result=array();

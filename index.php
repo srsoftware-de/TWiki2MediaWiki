@@ -31,8 +31,13 @@
     $_SESSION['current']['revision']=$_POST['revision'];
     $revision_code=get_twiki_code($_SESSION['current']['namespace'],$_SESSION['current']['page'],$_SESSION['current']['revision']);
     $top='<pre>'.$revision_code.'</pre>';
-    $media_wiki_code=convert_t2m($revision_code);
-    $bottom=show_submit_form($media_wiki_code);
+    if (strpos($revision_code,'topic does not exist')!==false){
+      pageDone();
+      $bottom='Diese Seite exisitert nicht und kann deshalb auch nicht übertragen werden!';
+    } else {
+      $media_wiki_code=convert_t2m($revision_code);
+      $bottom=show_submit_form($media_wiki_code);
+    }
   }
 
   if (isset($_POST['submission'])){
@@ -59,6 +64,7 @@
 
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
     <title>TWiki to Mediawiki converter</title>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
