@@ -127,7 +127,8 @@
 
   function read_camel_links($wikisource){
     $nolinks=preg_replace("/\[(.*?)\]/",'',$wikisource); // ignore links in square brackets
-    $nolinks=preg_replace("/\{(.*?)\}/",'',$nolinks);
+    $nolinks=preg_replace("/\{(.*?)\}/",'',$nolinks); // ignore links in curly brackets
+    $nolinks=preg_replace("/(&lt;nop&gt;.*?)\s/",'',$nolinks); // ignore links with <nop>InFront
     $alphanumeric=preg_replace("/[^A-Za-z0-9 ]/", ' ', $nolinks); 
     $word_source=str_replace(array("\r\n","\r","\n"),' ',$alphanumeric);
     $words=explode(' ',$word_source);
