@@ -7,7 +7,8 @@
       foreach ($revisions as $revision){
         $result='<li>'.$revision.'</li>'.PHP_EOL.$result;
       }
-      $result='<li><form class="edit_rev" method="POST" action="."><input type="submit" name="revision" value="'.$first.'"></input></form></li>'.$result;
+      $revisions[]=$first;
+      $result='<li><form class="edit_rev" method="POST" action="."><input type="submit" name="revision" value="'.$first.'"></input></form></li>'.PHP_EOL.$result;
       return '<ul class="revisions">'.PHP_EOL.$result.'</ul>'.PHP_EOL;
     }
   }

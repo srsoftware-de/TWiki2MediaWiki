@@ -134,15 +134,56 @@
     return implode("\n",$new_lines);
   }
 
+  function replace_weblinks($source){
+    $pos=strpos($source,'[[');
+    while ($pos!==false){
+      $end=strpos($source,']]',$pos)+2;
+      $original_link=substr($source,$pos,$end-$pos);
+      if (strpos($original_link,'][')!==false){
+        if (strpos($original_link,'://')!==false){
+          $new_link=str_replace('][',' ',$original_link);
+        } else {
+          $new_link=str_replace('][','|',$original_link);
+        }
+        $source=substr($source,0,$pos) . $new_link . substr($source,$end);
+      }
+      $pos=strpos($source,'[[',$end);
+    }
+    return $source;
+  }
+
+  function cleanup($source){
+    $pos=strpos($source,'[[[[');
+    while ($pos!==false){
+      $insert_start=strpos($source,'|',$pos);
+      $insert_middle=strpos($source,']]|[[',$insert_start);
+      if ($insert_middle===false){
+        print("Error in function cleanup! Can not process the following string:<br/>\n".substr($source,$pos));
+        die();
+      }
+      $insert_end=strpos($source,'|',$insert_middle+4);
+      $end=strpos($source,']]',$insert_end)+2;
+      $old_link=substr($source,$pos,$end-$pos);
+      $new_link=substr($source,$pos+2,$insert_start-$pos-1).substr($source,$insert_end+1,$end-$insert_end-3);
+//      print $old_link."<br/>\n".$new_link;
+//      die();
+      $source=substr($source,0,$pos).$new_link.substr($source,$end);
+      $pos=strpos($source,'[[[[');
+    }
+    return $source;
+  }
+
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
                    '%WIKITOOLNAME%'=>'TWiki',
                    '%WEB%'=>'[['.$_SESSION['current']['namespace'].']]');
     $source=str_replace(array_keys($replace),$replace,$source);
+    $source=replace_weblinks($source);
     $camelCaseLinks=read_camel_links($source);    
     $altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
     $altered_source=replace_headings($altered_source);
     $altered_source=replace_lists($altered_source);
+    $altered_source=cleanup($altered_source);
     $altered_source.="\n".'[[Category:'.$_SESSION['current']['namespace'].']]';
     return $altered_source;
   }
