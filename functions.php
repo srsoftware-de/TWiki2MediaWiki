@@ -123,6 +123,9 @@
     $lines=explode("\n",$source);
     $new_lines=array();
     foreach ($lines as $line){
+      if (trim($line)=='*'){
+        continue;
+      }
       $line=rtrim($line);
       if (strpos($line,'   * ')===0){
         $line=substr($line,3);
@@ -145,6 +148,7 @@
       if ($mid_pos!==false){
         if (strpos($original_link,'://')!==false){
           $new_link=str_replace('][',' ',$original_link);
+          $new_link=substr($new_link,1,-1);
         } else {
           $original_link_dest=substr($original_link,0,$mid_pos);
           $original_link_dest=str_replace('.',':',$original_link_dest);
@@ -267,7 +271,7 @@
 
     $data['wpTextbox1']=$content; // apply new content to textbox
     $data['wpSummary']='Revision '.$_SESSION['current']['revision'];
-
+    
     /* omit some input fields that belong to unused buttons or search fields */
     unset($data['wpMinoredit']);
     unset($data['wpWatchthis']);
