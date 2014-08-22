@@ -281,6 +281,7 @@
 
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
+                   '%TOC%'=>'__TOC__',
                    '%WIKITOOLNAME%'=>'[[TWiki]]',
                    '%TWIKIWEB%.'=>'TWiki:',
                    '%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].']]');
