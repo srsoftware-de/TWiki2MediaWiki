@@ -234,6 +234,7 @@
   }
 
   function replace_formats($source){
+
     $source=preg_replace("/\*([^\s*])/","'''$1",$source); // * followed by non-white-space
     $source=preg_replace("/([^\s*])\*/","$1'''",$source); // non-white-space followed by *
     
@@ -243,10 +244,7 @@
     $source=preg_replace("/_([^ ])/","''$1",$source);
     $source=preg_replace("/([^ ])_/","$1''",$source);
 
-    $source=preg_replace("/=([^ ])/","<code>$1",$source);
-    $source=preg_replace("/([^ ])=/","$1</code>",$source);
 
-    $source=str_replace('<code></code>','',$source); // cleanup 
 
 
     $source=str_replace('&lt;nop&gt;','',$source); // <nop>
@@ -291,6 +289,13 @@
     return implode("\n",$lines);
   }
 
+  function replace_codes($source){
+    $source=preg_replace("/([^ ])=/","$1</code>",$source);
+    $source=preg_replace("/=([^ ])/","<code>$1",$source);
+    $source=str_replace('<code></code>','',$source); // cleanup 
+    return $source;
+  }
+
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
                    '&lt;BR\&gt;'=>'<br/>',
@@ -301,6 +306,7 @@
     $source=replace_weblinks($source);
     $camelCaseLinks=read_camel_links($source);    
     $altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
+    $altered_source=replace_codes($altered_source);
     $altered_source=replace_headings($altered_source);
     $altered_source=replace_lists($altered_source);
     $altered_source=replace_formats($altered_source);
