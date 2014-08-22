@@ -205,7 +205,7 @@
   }
 
   function replace_weblinks($source){
-    $source=preg_replace('/-- Main.([^ ]+)/',"[[User:$1]]",$source);
+    $source=preg_replace('/-- Main.([^ ]+)/',"[[User:$1|$1]]",$source);
     
     $pos=strpos($source,'[[');
     while ($pos!==false){
