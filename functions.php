@@ -231,6 +231,7 @@
     $source=preg_replace("/([^\s*])\*/","$1'''",$source); // non-white-space followed by *
 //    $source=preg_replace("/_([^ ])/","''$1",$source);
 //    $source=preg_replace("/([^ ])_/","$1'''",$source);
+    $source=replace('&lt;nop&gt;','',$souce); // <nop>
     return $source;
     
   }
@@ -249,6 +250,28 @@
     return $source;
   }
 
+  function convert_tables($source){
+    $lines=explode("\n",$source);
+    $in_table=false;
+    for ($i=0;$i<count($lines);$i++){
+      $line=trim($lines[$i]);
+      if (substr($line,0,1) == '|' && substr($line,-1,1) == '|'){
+        $line='|'.str_replace('|','||',substr($line,1,-1))."\n|-";
+        if (!$in_table) {
+          $line='{| class="wikitable"'."\n".$line;
+        }
+        $in_table=true;
+        $lines[$i]=$line;
+      } else {
+        if ($in_table){
+          $lines[$i-1]=substr($lines[$i-1],0,-1).'}';
+        }
+        $in_table=false;
+      }
+    }
+    return implode("\n",$lines);
+  }
+
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
                    '%WIKITOOLNAME%'=>'[[TWiki]]',
@@ -262,6 +285,7 @@
     $altered_source=replace_lists($altered_source);
     $altered_source=replace_formats($altered_source);
     $altered_source=replace_includes($altered_source);
+    $altered_source=convert_tables($altered_source);
     $altered_source.="\n".'[[Category:'.$_SESSION['current']['namespace'].']]';
     return $altered_source;
   }
