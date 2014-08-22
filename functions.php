@@ -22,7 +22,8 @@
 
   function addLink($link,$namespace=NULL){
     if ($namespace==NULL){
-      $link=str_replace('/',':',$link);
+      $keys=array('/','.');
+      $link=str_replace($keys,':',$link);
       $parts=explode(':',$link);
       if (count($parts)>2){
         return;
@@ -129,7 +130,7 @@
     $nolinks=preg_replace("/\[(.*?)\]/",'',$wikisource); // ignore links in square brackets
     $nolinks=preg_replace("/\{(.*?)\}/",'',$nolinks); // ignore links in curly brackets
     $nolinks=preg_replace("/(&lt;nop&gt;.*?)\s/",'',$nolinks); // ignore links with <nop>InFront
-    $alphanumeric=preg_replace("/[^A-Za-z0-9 ]/", ' ', $nolinks); 
+    $alphanumeric=preg_replace("/[^A-Za-z0-9. ]/", ' ', $nolinks);
     $word_source=str_replace(array("\r\n","\r","\n"),' ',$alphanumeric);
     $words=explode(' ',$word_source);
     $map=array();
@@ -149,8 +150,12 @@
           }
         }
         if ($camel){
-          $map[$word]='[['.$_SESSION['current']['namespace'].':'.$word.'|'.$word.']]';
-          addLink($word,$_SESSION['current']['namespace']);
+          if (strpos($word,'.')!==false){
+            addLink($word);
+          } else{
+            $map[$word]='[['.$_SESSION['current']['namespace'].':'.$word.'|'.$word.']]';
+            addLink($word,$_SESSION['current']['namespace']);
+          }
         }
       }
     }
@@ -200,6 +205,8 @@
   }
 
   function replace_weblinks($source){
+    $source=preg_replace('/-- Main.([^ ]+)/',"[[User:$1]]",$source);
+    
     $pos=strpos($source,'[[');
     while ($pos!==false){
       $end=strpos($source,']]',$pos)+2;
