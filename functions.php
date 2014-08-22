@@ -236,10 +236,19 @@
   function replace_formats($source){
     $source=preg_replace("/\*([^\s*])/","'''$1",$source); // * followed by non-white-space
     $source=preg_replace("/([^\s*])\*/","$1'''",$source); // non-white-space followed by *
+    
     $source=preg_replace("/__([^ ])/","'''''$1",$source);
     $source=preg_replace("/([^ ])__/","$1''''''",$source);
+    
     $source=preg_replace("/_([^ ])/","''$1",$source);
     $source=preg_replace("/([^ ])_/","$1''",$source);
+
+    $source=preg_replace("/=([^ ])/","<code>$1",$source);
+    $source=preg_replace("/([^ ])=/","$1</code>",$source);
+
+    $source=str_replace('<code></code>','',$source); // cleanup 
+
+
     $source=str_replace('&lt;nop&gt;','',$source); // <nop>
     $source=str_replace('%TOC%','__TOC__',$source); // %TOC%
     return $source;
@@ -284,6 +293,7 @@
 
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
+                   '&lt;BR\&gt;'=>'<br/>',
                    '%WIKITOOLNAME%'=>'[[TWiki]]',
                    '%TWIKIWEB%.'=>'TWiki:',
                    '%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].']]');
@@ -297,6 +307,26 @@
     $altered_source=replace_includes($altered_source);
     $altered_source=convert_tables($altered_source);
     $altered_source.="\n".'[[Category:'.$_SESSION['current']['namespace'].']]';
+    $replace=array('%YELLOW%'=>'<font color="yellow">',
+                   '%ORANGE%'=>'<font color="orange">',
+                   '%RED%'=>'<font color="red">',
+                   '%PINK%'=>'<font color="pink">',
+                   '%PURPLE%'=>'<font color="purple">',
+                   '%TEAL%'=>'<font color="teal">',
+                   '%NAVY%'=>'<font color="navy">',
+                   '%BLUE%'=>'<font color="blue">',
+                   '%AQUA%'=>'<font color="aqua">',
+                   '%LIME%'=>'<font color="lime">',
+                   '%GREEN%'=>'<font color="green">',
+                   '%OLIVE%'=>'<font color="olive">',
+                   '%MAROON%'=>'<font color="maroon">',
+                   '%BROWN%'=>'<font color="brown">',
+                   '%BLACK%'=>'<font color="black">',
+                   '%GRAY%'=>'<font color="gray">',
+                   '%SILVER%'=>'<font color="silver">',
+                   '%WHITE%'=>'<font color="white">',
+                   '%ENDCOLOR%'=>'</font>');
+    $altered_source=str_replace(array_keys($replace),$replace,$altered_source);
     return $altered_source;
   }
 
