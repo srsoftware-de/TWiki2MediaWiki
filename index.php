@@ -31,7 +31,11 @@
   }
 
   if (isset($_POST['submission'])){
-    submit_content($_POST['submission']);
+    $content=$_POST['submission'];
+    if (isset($_POST['submitaddtodo'])){
+      $content.="\n[[Category:ToDo]]";
+    }
+    submit_content($content);
     $top='<iframe src="'.$_SESSION['destination']['url'].'/'.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'].'"></iframe>';
   }
   if (isset($_SESSION['destination']['url'])){

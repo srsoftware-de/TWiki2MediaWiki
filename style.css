@@ -64,10 +64,11 @@ textarea{
   min-height: 100px;
 }
 
-.submission input{
+.submission .submits{
   position: absolute;
   bottom: 0;
   right: 0;
+  z-index: 100;
 }
 
 .session_closer input{

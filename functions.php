@@ -231,7 +231,7 @@
     $source=preg_replace("/([^\s*])\*/","$1'''",$source); // non-white-space followed by *
 //    $source=preg_replace("/_([^ ])/","''$1",$source);
 //    $source=preg_replace("/([^ ])_/","$1'''",$source);
-    $source=replace('&lt;nop&gt;','',$souce); // <nop>
+    $source=str_replace('&lt;nop&gt;','',$source); // <nop>
     return $source;
     
   }

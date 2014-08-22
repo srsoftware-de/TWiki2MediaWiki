@@ -16,7 +16,9 @@
   function show_submit_form($code){
     $result='<form action="." method="POST" class="submission">'.PHP_EOL;
     $result.='<textarea name="submission">'.$code.'</textarea>'.PHP_EOL;
-    $result.='<input type="submit"></form>'.PHP_EOL;
+    $result.='<div class="submits">';
+    $result.='<input type="submit" name="submitaddtodo" value="absenden und TODO hinzufügen">';
+    $result.='<input type="submit"></div></form>'.PHP_EOL;
     return $result;
   }
 
