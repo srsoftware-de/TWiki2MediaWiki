@@ -9,7 +9,7 @@
       }
       $revisions[]=$first;
       $result='<li><form class="edit_rev" method="POST" action="."><input type="submit" name="revision" value="'.$first.'"></input></form></li>'.PHP_EOL.$result;
-      return '<ul class="revisions">'.PHP_EOL.$result.'</ul>'.PHP_EOL;
+      return $_SESSION['current']['namespace'].'/<br/>'.$_SESSION['current']['page'].'<br/><ul class="revisions">'.PHP_EOL.$result.'</ul>'.PHP_EOL;
     }
   }
 

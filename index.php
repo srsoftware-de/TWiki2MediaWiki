@@ -10,6 +10,13 @@
 
   $bottom.=display_session();
 
+  if (isset($_SESSION['current']) && isset($_SESSION['current']['namespace']) && $_SESSION['current']['namespace']=='TWiki'){
+    $top='Warning! The current namespace is '.$_SESSION['current']['namespace'].' which is a default'.
+    ' Mediawiki interwiki namespace. To create pages in that namespace, you first have to remove the '.
+    'respective interwiki association. For more information, visit <a href="http://www.mediawiki.org/wiki/Manual:Interwiki">'.
+    'http://www.mediawiki.org/wiki/Manual:Interwiki</a>.';
+  }
+
   if (isset($_POST['revision'])){
     $_SESSION['current']['revision']=$_POST['revision'];
     $revision_code=get_twiki_code($_SESSION['current']['namespace'],$_SESSION['current']['page'],$_SESSION['current']['revision']);
