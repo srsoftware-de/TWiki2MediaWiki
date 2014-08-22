@@ -236,9 +236,12 @@
   function replace_formats($source){
     $source=preg_replace("/\*([^\s*])/","'''$1",$source); // * followed by non-white-space
     $source=preg_replace("/([^\s*])\*/","$1'''",$source); // non-white-space followed by *
-//    $source=preg_replace("/_([^ ])/","''$1",$source);
-//    $source=preg_replace("/([^ ])_/","$1'''",$source);
+    $source=preg_replace("/__([^ ])/","'''''$1",$source);
+    $source=preg_replace("/([^ ])__/","$1''''''",$source);
+    $source=preg_replace("/_([^ ])/","''$1",$source);
+    $source=preg_replace("/([^ ])_/","$1''",$source);
     $source=str_replace('&lt;nop&gt;','',$source); // <nop>
+    $source=str_replace('%TOC%','__TOC__',$source); // %TOC%
     return $source;
     
   }
@@ -281,7 +284,6 @@
 
   function convert_t2m($source){
     $replace=array('&#037;'=>'%',
-                   '%TOC%'=>'__TOC__',
                    '%WIKITOOLNAME%'=>'[[TWiki]]',
                    '%TWIKIWEB%.'=>'TWiki:',
                    '%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].']]');
