@@ -116,7 +116,10 @@
     foreach ($parts as $part){
       if (!$current){
         $pos=strpos($part,'"');
-        $part=substr($part,0,$pos);
+        $part=trim(substr($part,0,$pos));
+        if ($part==''){
+          continue;
+        }
         $result[]=$part;
         if ($part=='r1.1'){
           break;
