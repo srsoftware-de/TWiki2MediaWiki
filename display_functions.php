@@ -11,7 +11,7 @@
         $result='<li>'.$revision.'</li>'.PHP_EOL.$result;
       }
       $revisions[]=$first;
-      $result='<li><form class="edit_rev" method="POST" action="."><input type="submit" name="revision" value="'.$first.'"></input></form></li>'.PHP_EOL.$result;
+      $result='<li><form class="edit_rev" method="POST" action="."><input id="first_revision" type="submit" name="revision" value="'.$first.'"></input></form></li>'.PHP_EOL.$result;
       return $_SESSION['current']['namespace'].'/<br/>'.$_SESSION['current']['page'].'<br/><ul class="revisions">'.PHP_EOL.$result.'</ul>'.PHP_EOL;
     }
   }
@@ -20,8 +20,8 @@
     $result='<form action="." method="POST" class="submission">'.PHP_EOL;
     $result.='<textarea name="submission">'.$code.'</textarea>'.PHP_EOL;
     $result.='<div class="submits">';
-    $result.='<input type="submit" name="submitaddtodo" value="absenden und TODO hinzufügen">';
-    $result.='<input type="submit"></div></form>'.PHP_EOL;
+    $result.='<input id="todo-submit" type="submit" name="submitaddtodo" value="absenden und TODO hinzufügen">';
+    $result.='<input id="plain-submit" type="submit"></div></form>'.PHP_EOL;
     return $result;
   }
 
