@@ -109,7 +109,15 @@
   }
 
   if (isset($_GET['auto'])){
-    $_SESSION['autoscript']=($_GET['auto']=='true');
+    if ($_GET['auto']=='true'){
+      $_SESSION['autoscript']=1;
+    }
+  }
+ if (isset($_POST['startAuto'])){
+    $_SESSION['autoscript']=1;
+  }
+  if (isset($_POST['stopAuto'])){
+    $_SESSION['autoscript']=0;
   }
 
 ?>

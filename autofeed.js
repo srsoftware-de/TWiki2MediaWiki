@@ -1,5 +1,5 @@
 button=null;
-pause=100;
+pause=500;
 revision=document.getElementById('first_revision');
 
 function clickButton(){
