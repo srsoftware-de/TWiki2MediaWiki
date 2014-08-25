@@ -55,21 +55,9 @@
     }
   } 
 
-
-//else {
-//    $upperleft=display_source();
-//  }
-
-//  if (!isset($_SESSION['destination_base'])){
-//    $lowerleft=ask_for_destination();
-//  } else {
-//    $lowerleft='<pre>'.get_wiki_code().'</pre>';
-//  }
-
-//  if (isset($_SESSION['source'])){
-//    $upperright.=show_revisions();
-//    $lowerright.=convert_source();
-//  }
+  if (isset($_GET['auto']) && $_GET['auto']=='true'){
+    $_SESSION['autoscript']=true;
+  }
 
 ?>
 
@@ -86,5 +74,9 @@
       <div class="bottom"><?php print $bottom; ?></div>
     </div>
     <div class="right"><?php print $right; ?></div>
+    <?php if (isset($_SESSION['autoscript']) && $_SESSION['autoscript']==true){
+      print '<script type="text/javascript" src="autofeed.js"></script>'.PHP_EOL;
+    }
+    ?>
   </body>
 </html>
