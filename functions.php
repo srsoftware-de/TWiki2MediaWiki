@@ -210,6 +210,12 @@
       if (strpos($line,'      * ')===0){
         $line='*'.substr($line,6);
       }
+      if (strpos($line,'         * ')===0){
+        $line='**'.substr($line,9);
+      }
+      if (strpos($line,'            * ')===0){
+        $line='***'.substr($line,12);
+      }
       
       if ((trim($line)=='') && (strpos(end($new_lines),'* ')===0)){
         // current line is empty, last line was an item, so empty line needs to be skipped
@@ -347,7 +353,9 @@
                    '%GRAY%'=>'<font color="gray">',
                    '%SILVER%'=>'<font color="silver">',
                    '%WHITE%'=>'<font color="white">',
-                   '%ENDCOLOR%'=>'</font>');
+                   '%ENDCOLOR%'=>'</font>',
+                   '<verbatim>'=>'<pre>',
+                   '</verbatim>'=>'</pre>');
     $altered_source=str_replace(array_keys($replace),$replace,$altered_source);
     return $altered_source;
   }
