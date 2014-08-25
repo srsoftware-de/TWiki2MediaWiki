@@ -33,7 +33,7 @@
   if (isset($_POST['submission'])){
     $content=$_POST['submission'];
     if (isset($_POST['submitaddtodo'])){
-      $content='[[Category:ConversionToDo]] Taken from '.$_SESSION['source']['url'].'/'.$_SESSION['current']['namespace'].'/'.$_SESSION['current']['page']."\n".$content;
+      $content='[[Category:ConversionToDo]] Converted from '.$_SESSION['source']['url'].'/'.$_SESSION['current']['namespace'].'/'.$_SESSION['current']['page']."\n".$content;
     }
     submit_content($content);
     $top='<iframe src="'.$_SESSION['destination']['url'].'/'.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'].'"></iframe>';
