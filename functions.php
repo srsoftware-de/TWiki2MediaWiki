@@ -81,10 +81,11 @@
       $auth=stream_context_create(array(
           'http' => array('header'  => $header )
           ));
-      return file_get_contents($url,false,$auth).PHP_EOL.$url;
+      $result=file_get_contents($url,false,$auth).PHP_EOL.$url;
     } else {
-      return file_get_contents($url);
+      $result=file_get_contents($url);
     }
+    return mb_convert_encoding($result,'UTF-8',mb_detect_encoding($result,'UTF-8, ISO-8859-1', true));
   }
 
   function display_destination(){
@@ -157,6 +158,21 @@
             addLink($word,$_SESSION['current']['namespace']);
           }
         }
+      }
+    }
+    $dummy=array();
+    foreach ($map as $key => $entry){
+      $len=strlen($key);
+      if (!isset($dummy[$len])){
+        $dummy[$len]=array();
+      }
+      $dummy[$len][$key]=$entry;
+    }
+    krsort($dummy);
+    $map=array();
+    foreach ($dummy as $len => $entries){
+      foreach ($entries as $key => $entry){
+        $map[$key]=$entry;
       }
     }
     return $map;
@@ -304,7 +320,7 @@
                    '%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].']]');
     $source=str_replace(array_keys($replace),$replace,$source);
     $source=replace_weblinks($source);
-    $camelCaseLinks=read_camel_links($source);    
+    $camelCaseLinks=read_camel_links($source);
     $altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
     $altered_source=replace_codes($altered_source);
     $altered_source=replace_headings($altered_source);
