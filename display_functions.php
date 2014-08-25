@@ -53,7 +53,7 @@
     $first=false;
     foreach ($_SESSION['links_open'] as $namespace=>$links){
       $result.='<li>'.$namespace.PHP_EOL.'<ul class="link">'.PHP_EOL;
-      foreach ($links as $link){
+      foreach ($links as $num => $link){
         $result.='<li><input ';
         if (!$first){
           $first=true;

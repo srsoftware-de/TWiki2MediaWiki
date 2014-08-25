@@ -325,6 +325,7 @@
     $replace=array('&#037;'=>'%',
                    '&lt;BR\&gt;'=>'<br/>',
                    '%WIKITOOLNAME%'=>'[[TWiki]]',
+                   '%WIKIPREFSTOPIC%'=>'TWikiPreferences',
                    '%TWIKIWEB%.'=>'TWiki:',
                    '%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].']]');
     $source=str_replace(array_keys($replace),$replace,$source);
