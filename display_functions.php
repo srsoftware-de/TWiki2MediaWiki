@@ -4,6 +4,9 @@
     if (!empty($revisions)){
       $result='';
       $first=array_pop($revisions);
+      if ($first==''){
+        return '';
+      }
       foreach ($revisions as $revision){
         $result='<li>'.$revision.'</li>'.PHP_EOL.$result;
       }
