@@ -45,10 +45,16 @@
 
   function show_links_open(){
     $result='<form class="editlink" method="POST" action="."><ul class="namespace">'.PHP_EOL;
+    $first=false;
     foreach ($_SESSION['links_open'] as $namespace=>$links){
       $result.='<li>'.$namespace.PHP_EOL.'<ul class="link">'.PHP_EOL;
       foreach ($links as $link){
-        $result.='<li><input type="submit" name="edit" value="'.$namespace.':'.$link.'"></input></li>'.PHP_EOL;
+        $result.='<li><input ';
+        if (!$first){
+          $first=true;
+          $result.='id="first_open_page" ';
+        }
+        $result.='type="submit" name="edit" value="'.$namespace.':'.$link.'"></input></li>'.PHP_EOL;
       }
       $result.='</ul>'.PHP_EOL.'</li>'.PHP_EOL;
     }
