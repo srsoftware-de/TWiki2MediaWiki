@@ -55,9 +55,6 @@
     }
   } 
 
-  if (isset($_GET['auto']) && $_GET['auto']=='true'){
-    $_SESSION['autoscript']=true;
-  }
 
 ?>
 

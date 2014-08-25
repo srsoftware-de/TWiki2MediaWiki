@@ -1,4 +1,5 @@
 button=null;
+pause=100;
 revision=document.getElementById('first_revision');
 
 function clickButton(){
@@ -12,6 +13,7 @@ if (revision!=null){
   if (plainsubmit!=null){
     button=plainsubmit;
   } else {
+//    pause=10000;
     button=revision;
   }
 } else {
@@ -22,8 +24,8 @@ if (revision!=null){
     page=document.getElementById('first_open_page');
     if (page!=null){
       button=page;
+      pause=5000;
     }
   }
 }
-alert(button.value);
-setTimeout("clickButton()",1000);
+setTimeout("clickButton()",pause);

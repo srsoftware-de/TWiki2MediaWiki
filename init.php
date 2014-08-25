@@ -107,4 +107,9 @@
       pageDone();
     }
   }
+
+  if (isset($_GET['auto'])){
+    $_SESSION['autoscript']=($_GET['auto']=='true');
+  }
+
 ?>
