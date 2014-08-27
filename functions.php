@@ -35,6 +35,9 @@
       }
     }
 
+    $link=preg_replace('/[#&\?].+/','//',$link);
+
+
     if (isset($_SESSION['links_done']) && isset($_SESSION['links_done'][$namespace]) && in_array($link,$_SESSION['links_done'][$namespace])){
       // dieser Link wurde schon abgearbeitet
     } else {
@@ -135,7 +138,7 @@
     $nolinks=preg_replace("/\{(.*?)\}/",'',$nolinks); // ignore links in curly brackets
     $nolinks=preg_replace("/(&lt;nop&gt;.*?)\s/",'',$nolinks); // ignore links with <nop>InFront
     $alphanumeric=preg_replace("/[^A-Za-z0-9. ]/", ' ', $nolinks);
-    $word_source=str_replace(array("\r\n","\r","\n"),' ',$alphanumeric);
+    $word_source=str_replace(array("\r\n","\r","\n",'/'),' ',$alphanumeric);
     $words=explode(' ',$word_source);
     $map=array();
     foreach ($words as $word){
@@ -325,8 +328,10 @@
     $replace=array('&#037;'=>'%',
                    '&lt;BR\&gt;'=>'<br/>',
                    '%WIKITOOLNAME%'=>'[[TWiki]]',
-                   '%WIKIPREFSTOPIC%'=>'TWikiPreferences',
+                   '%HOMETOPIC%'=>$_SESSION['current']['namespace'].$_SESSION['current']['page'],
+    							 '%WIKIPREFSTOPIC%'=>'TWikiPreferences',
                    '%TWIKIWEB%.'=>'TWiki:',
+                   '%TOPIC%'=>$_SESSION['current']['page'],
                    '%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].']]');
     $source=str_replace(array_keys($replace),$replace,$source);
     $source=replace_weblinks($source);
