@@ -465,9 +465,23 @@
     $pos=strpos($source,'<ul>');
     $source=substr($source,$pos);
     $pos=strpos($source,'</ul>');
-    $source=substr($source,0,$pos+5);
-    $source=preg_replace('<a class="twikiLink" href="\/twiki\/bin\/view\/.+/WebHome">','',$source);
-    $source=str_replace(array(' <>','</a>'),'',$source);
-    return $source;
+    $source=strip_tags(substr($source,0,$pos+5));
+    $namespaces=explode("\n",$source);
+    $list='<div class="flowLeft"><ul>'.PHP_EOL;
+    $code='<div class="flowLeft">'.t('Use te following settings in LocalSettings to add all these name spaces:').'<br/><code>'.PHP_EOL;
+    $num=100;
+    foreach ($namespaces as $namespace){
+      $namespace=trim($namespace);
+      if (!empty($namespace)){
+        $list.='<li>'.$namespace.'</li>'.PHP_EOL;
+        $code.='$wgExtraNamespaces['.$num.']=\''.$namespace.'\'<br/>'.PHP_EOL;
+        $num+=1;
+        $code.='$wgExtraNamespaces['.$num.']=\''.$namespace.'_talk\'<br/>'.PHP_EOL;
+        $num+=1;
+      }      
+    }
+    $list.='</ul></div>'.PHP_EOL;
+    $code.='</code></div>'.PHP_EOL;
+    return $list.$code;
   }
 ?>
