@@ -63,6 +63,7 @@
     $content = curl_exec($ch);
 
     $content=explode("\n",$content);
+
     foreach ($content as $line){
       if (strpos($line,'wpLoginToken')>0){
         $start=strpos($line,'value="')+7;

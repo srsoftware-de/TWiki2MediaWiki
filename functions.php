@@ -474,9 +474,9 @@
       $namespace=trim($namespace);
       if (!empty($namespace)){
         $list.='<li>'.$namespace.'</li>'.PHP_EOL;
-        $code.='$wgExtraNamespaces['.$num.']=\''.$namespace.'\'<br/>'.PHP_EOL;
+        $code.='$wgExtraNamespaces['.$num.']=\''.$namespace.'\';<br/>'.PHP_EOL;
         $num+=1;
-        $code.='$wgExtraNamespaces['.$num.']=\''.$namespace.'_talk\'<br/>'.PHP_EOL;
+        $code.='$wgExtraNamespaces['.$num.']=\''.$namespace.'_talk\';<br/>'.PHP_EOL;
         $num+=1;
       }      
     }
