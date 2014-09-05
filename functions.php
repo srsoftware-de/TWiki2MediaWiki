@@ -123,12 +123,14 @@
     $url=str_replace('view','rdiff',$url);
     $source=source_code($url);
 
+
     $parts=explode("rev=",$source);
     $current=true;
     $result=array();
     foreach ($parts as $part){
       if (!$current){
-        $pos=strpos($part,'"');
+        $pos=min(strpos($part,'"'),strpos($part,'&'));
+
         $part=trim(substr($part,0,$pos));
         if ($part==''){
           continue;
@@ -496,6 +498,7 @@
         $namespaces[]=$candidate;
       }
     }
+    sort($namespaces);
     return $namespaces;
   }
 ?>
