@@ -41,7 +41,10 @@
 
   if (isset($_SESSION['destination']['url'])){
     if (empty($_SESSION['links_open'])){
-      get_destination_namespaces();
+      $namespaces=get_destination_namespaces();
+      foreach ($namespaces as $namespace){
+        $_SESSION['links_open'][$namespace]=array('WebHome');
+      }
     }
     $left.=show_links_open();
   }
