@@ -450,21 +450,8 @@
 
     $postdata = http_build_query($data);
 
-    $ch = curl_init();
     $url=$_SESSION['destination']['url'].'?action=submit&title='.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'];
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
-    curl_setopt($ch, CURLOPT_HEADER  ,1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_USERPWD, $_SESSION['destination']['user'] . ":" . $_SESSION['destination']['password']);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$postdata);
-    curl_setopt($ch, CURLOPT_COOKIEJAR, $_SESSION['destination']['cookies']);
-    curl_setopt($ch, CURLOPT_COOKIEFILE, $_SESSION['destination']['cookies']);
-    $content = curl_exec($ch);
-    $content=curl_error($ch).PHP_EOL.$content;
+    $content=source_code($url,$_SESSION['destination'],$postdata);
     return $content;
   }
 
@@ -502,6 +489,9 @@
     $namespaces=array();
     foreach ($namespace_candidates as $candidate){
       $candidate=trim($candidate);
+      if ($candidate==''){
+        continue;
+      }
       if (strpos($candidate,'talk') === false){
         $namespaces[]=$candidate;
       }

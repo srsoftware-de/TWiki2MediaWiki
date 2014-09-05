@@ -21,11 +21,11 @@
     $result.='<textarea name="submission">'.$code.'</textarea>'.PHP_EOL;
     $result.='<div class="submits">'.PHP_EOL;
     if (isset($_SESSION['autoscript']) && ($_SESSION['autoscript']==1)){
-      $result.='<input type="submit" name="stopAuto" value="stop automatic submissions">'.PHP_EOL;
+      $result.='<input type="submit" name="stopAuto" value="'.t('stop automatic submissions').'">'.PHP_EOL;
     } else {
-      $result.='<input type="submit" name="startAuto" value="start automatic submissions">'.PHP_EOL;
+      $result.='<input type="submit" name="startAuto" value="'.t('start automatic submissions').'">'.PHP_EOL;
     }
-    $result.='<input id="todo-submit" type="submit" name="submitaddtodo" value="absenden und TODO hinzufügen">'.PHP_EOL;
+    $result.='<input id="todo-submit" type="submit" name="submitaddtodo" value="'.t('submit and add TODO').'">'.PHP_EOL;
     $result.='<input id="plain-submit" type="submit"></div></form>'.PHP_EOL;
     return $result;
   }
