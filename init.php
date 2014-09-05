@@ -2,6 +2,12 @@
   include_once 'functions.php';
   session_start();
   include_once 'lang.php';
+
+  $left="";
+  $right="";
+  $top="";
+  $bottom="";
+
   if (isset($_POST['closesession'])){
     session_destroy();
   } 
@@ -54,7 +60,6 @@
     $postdata = http_build_query($data);
 
     /* recieve cookie from destination wiki */
-
     source_code($_SESSION['destination']['url'].'?title=Special:UserLogin&action=submitlogin&type=login',$_SESSION['destination'],$postdata);
   }
 
@@ -64,6 +69,10 @@
     $_SESSION['current']['namespace']=$parts[0];
     $_SESSION['current']['page']=$parts[1];
     $_SESSION['current']['revisions']=read_revisions();
+    if (empty($_SESSION['current']['revisions'])){
+      pageDone();
+      $top=str_replace('<page>','<strong>'.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'].'</strong>',t('The page <page> could not be found. Skipping it.'));
+    }
   }
 
   if (isset($_POST['revision'])){

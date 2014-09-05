@@ -498,7 +498,14 @@
   function get_destination_namespaces(){
     $source=source_code($_SESSION['destination']['url'].'api.php?action=query&meta=siteinfo&siprop=namespaces&format=xml',$_SESSION['destination']);
     $source=strip_tags(str_replace('</ns>',"\n",$source));
-    $namespaces=explode("\n",$source);
+    $namespace_candidates=explode("\n",$source);
+    $namespaces=array();
+    foreach ($namespace_candidates as $candidate){
+      $candidate=trim($candidate);
+      if (strpos($candidate,'talk') === false){
+        $namespaces[]=$candidate;
+      }
+    }
     return $namespaces;
   }
 ?>

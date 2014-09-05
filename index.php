@@ -3,11 +3,6 @@
   include_once "functions.php";
   include_once "display_functions.php";
 
-  $left="";
-  $right="";
-  $top="";
-  $bottom="";
-
   $bottom.=display_session();
 
   if (isset($_SESSION['current']) && isset($_SESSION['current']['namespace']) && $_SESSION['current']['namespace']=='TWiki'){
