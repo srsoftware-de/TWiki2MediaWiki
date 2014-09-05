@@ -33,14 +33,14 @@
     $cookies = array();
     preg_match_all('/Set-Cookie:(?<cookie>\s{0,}.*)$/im', $content, $cookies);
     $_SESSION['source']['cookies']=$cookies;
-    $url=$_SESSION['source']['url'];
-    $namespace=basename(dirname($url));
-    $link=basename($url);
-    $_SESSION['source']['url']=dirname(dirname($url)); // this is rather bad and only works, with you start with http://server.com/path/to/wiki/namespace/some_page
-    if (!isset($_SESSION['links_open']['namespace'])){
-      $_SESSION['links_open'][$namespace]=array();
-    }
-    $_SESSION['links_open'][$namespace][]=$link;
+//    $url=$_SESSION['source']['url'];
+//    $namespace=basename(dirname($url));
+//    $link=basename($url);
+//    $_SESSION['source']['url']=dirname(dirname($url)); // this is rather bad and only works, with you start with http://server.com/path/to/wiki/namespace/some_page
+//    if (!isset($_SESSION['links_open']['namespace'])){
+//      $_SESSION['links_open'][$namespace]=array();
+//    }
+//    $_SESSION['links_open'][$namespace][]=$link;
   }
   
   if (isset($_POST['destination'])){

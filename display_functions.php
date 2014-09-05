@@ -50,6 +50,7 @@
     $result.=t('Note').': '.t('The pages to be transferred will be determined by the namespaes present in the destination MediaWiki.').'<br/>'.PHP_EOL;
     $result.=t('Make sure to <a href="http://www.mediawiki.org/wiki/Manual:Namespace">create approprate namespaces</a> in the destination wiki before going to the next step!').'<br/>'.PHP_EOL;
     $result.=t('The following namespaces are defined in the source TWiki:');
+    $result.=get_source_namespaces();
     return $result;
   }
 

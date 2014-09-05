@@ -457,4 +457,17 @@
     $content=curl_error($ch).PHP_EOL.$content;
     return $content;
   }
+
+  function get_source_namespaces(){
+    $source=source_code($_SESSION['source']['url']);
+    $pos=strpos($source,'<strong>TWiki Webs</strong>');
+    $source=substr($source,$pos);
+    $pos=strpos($source,'<ul>');
+    $source=substr($source,$pos);
+    $pos=strpos($source,'</ul>');
+    $source=substr($source,0,$pos+5);
+    $source=preg_replace('<a class="twikiLink" href="\/twiki\/bin\/view\/.+/WebHome">','',$source);
+    $source=str_replace(array(' <>','</a>'),'',$source);
+    return $source;
+  }
 ?>
