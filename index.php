@@ -40,6 +40,9 @@
   }
 
   if (isset($_SESSION['destination']['url'])){
+    if (empty($_SESSION['links_open'])){
+      get_destination_namespaces();
+    }
     $left.=show_links_open();
   }
 

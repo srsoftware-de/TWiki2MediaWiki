@@ -17,50 +17,24 @@
   if (isset($_POST['source'])){
     /* store source variables */
     $_SESSION['source']=$_POST['source'];
-
-    /* prepare to recieve cookie from source wiki */
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $_SESSION['source']['url']);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
-    curl_setopt($ch, CURLOPT_HEADER  ,1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_USERPWD, $_SESSION['source']['user'] . ":" . $_SESSION['source']['password']);
-    $content = curl_exec($ch);
-
-    // actually recieve cookies
-    $cookies = array();
-    preg_match_all('/Set-Cookie:(?<cookie>\s{0,}.*)$/im', $content, $cookies);
-    $_SESSION['source']['cookies']=$cookies;
-//    $url=$_SESSION['source']['url'];
-//    $namespace=basename(dirname($url));
-//    $link=basename($url);
-//    $_SESSION['source']['url']=dirname(dirname($url)); // this is rather bad and only works, with you start with http://server.com/path/to/wiki/namespace/some_page
-//    if (!isset($_SESSION['links_open']['namespace'])){
-//      $_SESSION['links_open'][$namespace]=array();
-//    }
-//    $_SESSION['links_open'][$namespace][]=$link;
+    $_SESSION['source']['cookies']=tempnam('/tmp','twiki');
+    source_code($_SESSION['source']['url'],$_SESSION['source']); // get cookies
   }
   
-  if (isset($_POST['destination'])){
+  if (isset($_POST['destination']) && !empty($_POST['destination']['url'])){
     /* store destination variables */
+    $url=$_POST['destination']['url'];
+    $needle='index.php';
+    if (substr($url,-strlen($needle))===$needle){
+      $url=substr($url,0,-strlen($needle));
+      $_POST['destination']['url']=$url;
+    }
     $_SESSION['destination']=$_POST['destination'];
     $_SESSION['destination']['cookies']=tempnam('/tmp','mediawiki');
 
     /* recive login token from wiki login page */
 
-    $ch=curl_init();
-    curl_setopt($ch, CURLOPT_URL, $_SESSION['destination']['url'].'?title=Special:UserLogin');
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
-    curl_setopt($ch, CURLOPT_HEADER  ,1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_COOKIEJAR, $_SESSION['destination']['cookies']);
-    curl_setopt($ch, CURLOPT_COOKIEFILE, $_SESSION['destination']['cookies']);
-
-    $content = curl_exec($ch);
+    $content=source_code($_SESSION['destination']['url'].'?title=Special:UserLogin',$_SESSION['destination']);
 
     $content=explode("\n",$content);
 
@@ -80,19 +54,8 @@
     $postdata = http_build_query($data);
 
     /* recieve cookie from destination wiki */
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $_SESSION['destination']['url'].'?title=Special:UserLogin&action=submitlogin&type=login');
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
-    curl_setopt($ch, CURLOPT_HEADER  ,1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_USERPWD, $_SESSION['destination']['user'] . ":" . $_SESSION['destination']['password']);
-    curl_setopt($ch, CURLOPT_POST,1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$postdata);
-    curl_setopt($ch, CURLOPT_COOKIEJAR, $_SESSION['destination']['cookies']);
-    curl_setopt($ch, CURLOPT_COOKIEFILE, $_SESSION['destination']['cookies']);
-    curl_exec($ch);
+
+    source_code($_SESSION['destination']['url'].'?title=Special:UserLogin&action=submitlogin&type=login',$_SESSION['destination'],$postdata);
   }
 
   if (isset($_POST['edit'])){

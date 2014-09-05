@@ -62,7 +62,7 @@
     if ($revision!=null){
       $url.='&rev='.$revision;
     }
-    $full_code=source_code($url,true);
+    $full_code=source_code($url,$_SESSION['source']);
     $pos=strpos($full_code,'textarea');
     $result= $full_code;
     if ($pos){
@@ -78,13 +78,23 @@
   }
 
   /* fetches a page by url */
-  function source_code($url,$use_auth=true){
-    if ($use_auth && isset($_SESSION['source']['user'])){
-      $header='Authorization: Basic '.base64_encode($_SESSION['source']['user'].':'.$_SESSION['source']['password']).PHP_EOL.'Cookie: '.$_SESSION['source']['cookies']['cookie'][0];
-      $auth=stream_context_create(array(
-          'http' => array('header'  => $header )
-          ));
-      $result=file_get_contents($url,false,$auth).PHP_EOL.$url;
+  function source_code($url,$auth=null,$postData=null){
+    if ($auth!=null && isset($auth['user'])){
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0');
+//      curl_setopt($ch, CURLOPT_HEADER  ,1);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,1);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+      curl_setopt($ch, CURLOPT_USERPWD, $auth['user'] . ":" . $auth['password']);
+      curl_setopt($ch, CURLOPT_COOKIEJAR, $auth['cookies']);
+      curl_setopt($ch, CURLOPT_COOKIEFILE, $auth['cookies']);
+      if ($postData!=null){
+        curl_setopt($ch, CURLOPT_POST,1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,$postData);
+      }
+      $result=curl_exec($ch);
     } else {
       $result=file_get_contents($url);
     }
@@ -459,7 +469,7 @@
   }
 
   function get_source_namespaces(){
-    $source=source_code($_SESSION['source']['url']);
+    $source=source_code($_SESSION['source']['url'],$_SESSION['source']);
     $pos=strpos($source,'<strong>TWiki Webs</strong>');
     $source=substr($source,$pos);
     $pos=strpos($source,'<ul>');
@@ -483,5 +493,12 @@
     $list.='</ul></div>'.PHP_EOL;
     $code.='</code></div>'.PHP_EOL;
     return $list.$code;
+  }
+
+  function get_destination_namespaces(){
+    $source=source_code($_SESSION['destination']['url'].'api.php?action=query&meta=siteinfo&siprop=namespaces&format=xml',$_SESSION['destination']);
+    $source=strip_tags(str_replace('</ns>',"\n",$source));
+    $namespaces=explode("\n",$source);
+    return $namespaces;
   }
 ?>
