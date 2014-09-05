@@ -18,7 +18,7 @@
     $top='<pre>'.$revision_code.'</pre>';
     if (strpos($revision_code,'topic does not exist')!==false){
       pageDone();
-      $bottom='Diese Seite exisitert nicht und kann deshalb auch nicht übertragen werden!';
+      $bottom=t('This page is not existent. Thus, it can not be transferred!');
     } else {
       $media_wiki_code=convert_t2m($revision_code);
       $bottom=show_submit_form($media_wiki_code);
