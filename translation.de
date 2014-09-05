@@ -1,0 +1,9 @@
+Make sure to <a href="http://www.mediawiki.org/wiki/Manual:Namespace">create approprate namespaces</a> in the destination wiki before going to the next step! => Stellen Sie sicher, dass Sie im Ziel-Wiki die gewünschten <a href="http://www.mediawiki.org/wiki/Manual:Namespace/de">Namensräme erzeugen</a>, bevor Sie fortfahren!
+Destination Wiki (Mediawiki) => Ziel-Wiki (Mediawiki)
+Note => Hinweis
+Password (optional)  => Passwort (optional)
+Source Wiki (Twiki)  => Quell-Wiki (TWiki)
+The following namespaces are defined in the source TWiki: => Die folgenden Namensräume gibt es im Quell-TWiki:
+The pages to be transferred will be determined by the namespaes present in the destination MediaWiki. => Die im Ziel-Mediawiki vorhandenen Namensräume bestimmen, welche Seiten übertragen werden.
+User name (optional) => Benutzername (optional)
+Use te following settings in LocalSettings to add all these name spaces: => Mit folgenden Einstellungen in LocalSettings können diese Namensräume hinzuzufügt werden:
