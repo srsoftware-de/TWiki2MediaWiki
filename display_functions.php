@@ -31,21 +31,26 @@
   }
 
   function ask_for_source(){
-    return '<form method="POST" action=".">
-      <input type="text" name="source[url]" /> Quell-Wiki (TWiki)<br/>
-      <input type="text" name="source[user]" />Benutzername (optional)<br/>
-      <input type="password" name="source[password]"/>Passwort (optional)<br/>
-      <input type="submit"/>
-    </form>';  
+    $result ='<form method="POST" action=".">'.PHP_EOL;
+    $result.='<input type="text" name="source[url]" />'.t('Source Wiki (Twiki)').'<br/>'.PHP_EOL;
+    $result.='<input type="text" name="source[user]" />'.t('User name (optional)').'<br/>'.PHP_EOL;
+    $result.='<input type="password" name="source[password]"/>'.t('Password (optional)').'<br/>'.PHP_EOL;
+    $result.='<input type="submit"/>'.PHP_EOL;
+    $result.='</form>';
+    return $result;
   }
 
   function ask_for_destination(){
-    return '<form method="POST" action=".">
-      <input type="text" name="destination[url]" /> Ziel-Wiki (Mediawiki)<br/>
-      <input type="text" name="destination[user]" />Benutzername (optional)<br/>
-      <input type="password" name="destination[password]"/>Passwort (optional)<br/>
-      <input type="submit"/>
-    </form>';
+    $result ='<form method="POST" action=".">'.PHP_EOL;
+    $result.='<input type="text" name="destination[url]" />'.t('Destination Wiki (Mediawiki)').'<br/>'.PHP_EOL;
+    $result.='<input type="text" name="destination[user]" />'.t('User name (optional)').'<br/>'.PHP_EOL;
+    $result.='<input type="password" name="destination[password]"/>'.t('Password (optional)').'<br/>'.PHP_EOL;
+    $result.='<input type="submit"/>'.PHP_EOL;
+    $result.='</form>'.PHP_EOL;
+    $result.=t('Note').': '.t('The pages to be transferred will be determined by the namespaes present in the destination MediaWiki.').'<br/>'.PHP_EOL;
+    $result.=t('Make sure to <a href="http://www.mediawiki.org/wiki/Manual:Namespace">create approprate namespaces</a> in the destination wiki before going to the next step!').'<br/>'.PHP_EOL;
+    $result.=t('The following namespaces are defined in the source TWiki:');
+    return $result;
   }
 
   function show_links_open(){
