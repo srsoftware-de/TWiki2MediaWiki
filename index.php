@@ -38,6 +38,7 @@
     submit_content($content);
     $top='<iframe src="'.$_SESSION['destination']['url'].'/'.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'].'"></iframe>';
   }
+
   if (isset($_SESSION['destination']['url'])){
     $left.=show_links_open();
   }

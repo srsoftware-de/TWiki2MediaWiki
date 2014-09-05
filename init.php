@@ -1,6 +1,7 @@
 <?php
   include_once 'functions.php';
   session_start();
+  include_once 'lang.php';
   if (isset($_POST['closesession'])){
     session_destroy();
   } 
