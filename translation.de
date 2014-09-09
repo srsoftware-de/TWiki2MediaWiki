@@ -12,3 +12,4 @@ The pages to be transferred will be determined by the namespaes present in the d
 This page is not existent. Thus, it can not be transferred. => Diese Seite exisitert nicht und kann deshalb auch nicht übertragen werden!
 User name (optional) => Benutzername (optional)
 Use te following settings in LocalSettings to add all these name spaces: => Mit folgenden Einstellungen in LocalSettings können diese Namensräume hinzuzufügt werden:
+Warning: It seems like the cURL library is not installed. The converter will not work without cURL! => Achtung! Die cURL-Bibliothek schein nicht installiert zu sein. Der Konverter funktioniert ohne cURL nicht!

@@ -36,7 +36,10 @@
     $result.='<input type="text" name="source[user]" />'.t('User name (optional)').'<br/>'.PHP_EOL;
     $result.='<input type="password" name="source[password]"/>'.t('Password (optional)').'<br/>'.PHP_EOL;
     $result.='<input type="submit"/>'.PHP_EOL;
-    $result.='</form>';
+    $result.='</form>'.PHP_EOL;
+    if (!function_exists('curl_version')){
+		 $result.=t('Warning: It seems like the cURL library is not installed. The converter will not work without cURL!');
+    }
     return $result;
   }
 
