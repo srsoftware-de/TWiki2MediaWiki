@@ -39,7 +39,6 @@
 
     $link=preg_replace('/[#&\?].+/','//',$link);
 
-
     if (isset($_SESSION['links_done']) && isset($_SESSION['links_done'][$namespace]) && in_array($link,$_SESSION['links_done'][$namespace])){
       // dieser Link wurde schon abgearbeitet
     } else {
@@ -53,10 +52,6 @@
         $_SESSION['links_open'][$namespace][]=$link;
       }
     }
-  }
-
-  function display_source(){
-    return '<iframe src="'.$_SESSION['source']['url'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
   }
 
   function get_twiki_code($namespace,$page,$revision=null){
@@ -101,22 +96,6 @@
       $result=file_get_contents($url);
     }
     return mb_convert_encoding($result,'UTF-8',mb_detect_encoding($result,'UTF-8, ISO-8859-1', true));
-  }
-
-  function display_destination(){
-    return '<iframe src="'.$_SESSION['destination']['url'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
-  }
-
-  function add_session_closer(){
-    return '<form class="session_closer" method="POST" action=".">
-      <input type="submit" name="closesession" value="neue Session" />
-    </form>';
-  }
-
-  function display_session(){
-    $result='Session:<pre>'.print_r($_SESSION,true).'</pre>';
-    $result.='POST:<pre>'.print_r($_POST,true).'</pre>';
-    return $result;
   }
 
   /* parses the revision diff site for old revision numbers */

@@ -73,4 +73,24 @@
     return $result;
   }
 
+  function display_source(){
+  	return '<iframe src="'.$_SESSION['source']['url'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
+  }
+
+  function display_destination(){
+  	return '<iframe src="'.$_SESSION['destination']['url'].'">Ihr Browser scheint keine IFrames zu unterstützen.</iframe>';
+  }
+
+  function add_session_closer(){
+  	return '<form class="session_closer" method="POST" action=".">
+  	<input type="submit" name="closesession" value="neue Session" />
+  	</form>';
+  }
+  
+  function display_session(){
+  	$result='Session:<pre>'.print_r($_SESSION,true).'</pre>';
+  	$result.='POST:<pre>'.print_r($_POST,true).'</pre>';
+  	return $result;
+  }
+  
 ?>
