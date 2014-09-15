@@ -32,7 +32,7 @@
       $content='[[Category:ConversionToDo]] Converted from '.$_SESSION['source']['url'].'/'.$_SESSION['current']['namespace'].'/'.$_SESSION['current']['page']."\n".$content;
     }
     submit_content($content);
-    $top='<iframe src="'.$_SESSION['destination']['url'].'/index.php/'.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'].'"></iframe>';
+    $top='<iframe src="'.$_SESSION['destination']['url'].'/index.php?title='.$_SESSION['current']['namespace'].':'.$_SESSION['current']['page'].'"></iframe>';
   }
 
   if (isset($_SESSION['destination']['url'])){

@@ -119,31 +119,8 @@ function read_camel_links($wikisource){
 }
 
 function replace_weblinks($source){
-	$source=preg_replace('/-- Main.([^ ]+)/',"[[User:$1|$1]]",$source);
-
-	$pos=strpos($source,'[[');
-	while ($pos!==false){
-		$end=strpos($source,']]',$pos)+2;
-		$original_link=substr($source,$pos,$end-$pos);
-		$mid_pos=strpos($original_link,'][');
-		if ($mid_pos!==false){
-			if (strpos($original_link,':/')!==false){
-				$new_link=str_replace('][',' ',$original_link);
-				$new_link=substr($new_link,1,-1);
-			} else {
-				$original_link_dest=substr($original_link,0,$mid_pos);
-				$original_link_dest=str_replace('.',':',substr($original_link_dest,2));
-				if (strpos($original_link_dest,':')===false){
-					$original_link_dest=$_SESSION['current']['namespace'].':'.$original_link_dest;
-				}
-				$original_link_text=substr($original_link,$mid_pos+2);
-				addLink($original_link_dest);
-				$new_link='[['.$original_link_dest.'|'.$original_link_text;
-			}
-			$source=substr($source,0,$pos) . $new_link . substr($source,$end);
-		}
-		$pos=strpos($source,'[[',$end);
-	}
+	$source=preg_replace('|\[\[(https?:/+[^\]]+)\]\[([^\]]+)\]\]|',"[$1 $2]", $source);
+	$source=preg_replace('|\[\[file:/*(/[^\]]+)\]\[([^\]]+)\]\]|',"<file>$1 $2</file>", $source);
 	return $source;
 }
 
