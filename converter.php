@@ -41,13 +41,14 @@ function convert_t2m($source){
 			'%WHITE%'=>'<font color="white">',
 			'%ENDCOLOR%'=>'</font>',
 			'<verbatim>'=>'<pre>',
-			'</verbatim>'=>'</pre>');
+			'</verbatim>'=>'</pre>',
+			'<br>'=>'<br/>');
 	$altered_source=str_replace(array_keys($replace),$replace,$altered_source);
 	return $altered_source;
 }
 
 function replace_camel_links($source){
-	$source=preg_replace('/([^A-Za-z0-9])([A-Za-z0-9]+).([A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)([^A-Za-z0-9])/',"$1[[$2:$3]]$4",$source); // Replace Namespace.CamelCase => [[Namespace:CamelCase]]
+	$source=preg_replace('/([^A-Za-z0-9])([A-Za-z0-9]+)\.([A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)([^A-Za-z0-9])/',"$1[[$2:$3]]$4",$source); // Replace Namespace.CamelCase => [[Namespace:CamelCase]]
 	$source=preg_replace('/([^A-Za-z0-9:])([A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)([^A-Za-z0-9])/',"$1[[".$_SESSION['current']['namespace'].":$2]]$3",$source);
 	return $source;
 }
@@ -209,18 +210,22 @@ function replace_lists($source){
 
 
 function replace_formats($source){
+	
+	$source=preg_replace('/\*([A-Za-z0-9][^*]*)\*/',"'''$1'''",$source); // *some text* => '''some text'''
+	
+	$source=preg_replace('/__([A-Za-z0-9][^_]*)__/',"'''''$1'''''",$source); // __some text__ => '''''some text'''''
+	
+	$source=preg_replace('/_([A-Za-z0-9][^_]*)_/',"''$1''",$source); // _some text_ => ''some text''
+		
 
-	$source=preg_replace("/\*([^\s*])/","'''$1",$source); // * followed by non-white-space
-	$source=preg_replace("/([^\s*])\*/","$1'''",$source); // non-white-space followed by *
+//	$source=preg_replace("/\*([^\s*])/","'''$1",$source); // * followed by non-white-space
+//	$source=preg_replace("/([^\s*])\*/","$1'''",$source); // non-white-space followed by *
 
-	$source=preg_replace("/__([^ ])/","'''''$1",$source);
-	$source=preg_replace("/([^ ])__/","$1''''''",$source);
+//	$source=preg_replace("/__([^ ])/","'''''$1",$source);
+//	$source=preg_replace("/([^ ])__/","$1''''''",$source);
 
-	$source=preg_replace("/_([^ ])/","''$1",$source);
-	$source=preg_replace("/([^ ])_/","$1''",$source);
-
-
-
+//	$source=preg_replace("/_([^ ])/","''$1",$source);
+//	$source=preg_replace("/([^ ])_/","$1''",$source);
 
 	$source=str_replace('&lt;nop&gt;','',$source); // <nop>
 	$source=str_replace('%TOC%','__TOC__',$source); // %TOC%
