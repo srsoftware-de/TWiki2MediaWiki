@@ -12,7 +12,8 @@ function convert_t2m($source){
 	$source=replace_weblinks($source);
 	$camelCaseLinks=read_camel_links($source);
 	$altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
-	$altered_source=replace_codes($altered_source);
+	$altered_source=replace_anchors($altered_source);
+	$altered_source=replace_codes($altered_source);	
 	$altered_source=replace_headings($altered_source);
 	$altered_source=replace_lists($altered_source);
 	$altered_source=replace_formats($altered_source);
@@ -42,6 +43,11 @@ function convert_t2m($source){
 			'</verbatim>'=>'</pre>');
 	$altered_source=str_replace(array_keys($replace),$replace,$altered_source);
 	return $altered_source;
+}
+
+// replaces <a name="anchorname">some text</a> by <span id="anchorname">some text</span>
+function replace_anchors($source){
+	return preg_replace('/&lt;a name="([^"])"&gt;(.*)&lt;\/a&gt;/',"<span id=\"$1\">$2</span>",$source);
 }
 
 function read_camel_links($wikisource){
@@ -126,8 +132,9 @@ function replace_weblinks($source){
 
 
 function replace_codes($source){
-	$source=preg_replace("/([^ ])=/","$1</code>",$source);
-	$source=preg_replace("/=([^ ])/","<code>$1",$source);
+	//$source=preg_replace("/([^ ])=/","$1</code>",$source);
+	//$source=preg_replace("/=([^ ])/","<code>$1",$source);
+	$source=preg_replace("/=([^ ].*[^ ])=/","<code>$1</code>",$source); // wirks well with Main:TWikiUsers	
 	$source=str_replace('<code></code>','',$source); // cleanup
 	return $source;
 }
@@ -170,7 +177,19 @@ function replace_lists($source){
 		if (strpos($line,'            * ')===0){
 			$line='***'.substr($line,12);
 		}
-
+		if (strpos($line,'   1 ')===0){
+			$line='#'.substr($line,4);
+		}
+		if (strpos($line,'      1 ')===0){
+			$line='##'.substr($line,7);
+		}
+		if (strpos($line,'         1 ')===0){
+			$line='###'.substr($line,10);
+		}
+		if (strpos($line,'            1 ')===0){
+			$line='####'.substr($line,13);
+		}
+		
 		if ((trim($line)=='') && (strpos(end($new_lines),'* ')===0)){
 			// current line is empty, last line was an item, so empty line needs to be skipped
 		} else {
