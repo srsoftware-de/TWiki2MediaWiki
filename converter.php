@@ -171,17 +171,17 @@ function replace_lists($source){
 		if (strpos($line,'            * ')===0){
 			$line='***'.substr($line,12);
 		}
-		if (strpos($line,'   1 ')===0){
-			$line='#'.substr($line,4);
+		if (strpos($line,'   1. ')===0){
+			$line='#'.substr($line,5);
 		}
-		if (strpos($line,'      1 ')===0){
-			$line='##'.substr($line,7);
+		if (strpos($line,'      1. ')===0){
+			$line='##'.substr($line,6);
 		}
-		if (strpos($line,'         1 ')===0){
-			$line='###'.substr($line,10);
+		if (strpos($line,'         1. ')===0){
+			$line='###'.substr($line,11);
 		}
-		if (strpos($line,'            1 ')===0){
-			$line='####'.substr($line,13);
+		if (strpos($line,'            1. ')===0){
+			$line='####'.substr($line,14);
 		}
 		
 		if ((trim($line)=='') && (strpos(end($new_lines),'* ')===0)){
