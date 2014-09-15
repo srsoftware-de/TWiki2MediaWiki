@@ -2,23 +2,23 @@
 function convert_t2m($source){
 	$replace=array('&#037;'=>'%',
 			'&lt;BR\&gt;'=>'<br/>',
-			'%WIKITOOLNAME%'=>'[[TWiki]]',
+			'%WIKITOOLNAME%'=>'TWiki',
 			'%HOMETOPIC%'=>$_SESSION['current']['namespace'].$_SESSION['current']['page'],
 			'%WIKIPREFSTOPIC%'=>'TWikiPreferences',
-			'%TWIKIWEB%.'=>'TWiki:',
+			'%TWIKIWEB%'=>'TWiki',
 			'%TOPIC%'=>$_SESSION['current']['page'],
-			'%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].']]');
+			'%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].'|'.$_SESSION['current']['namespace'].']]');
 	$source=str_replace(array_keys($replace),$replace,$source);
 	$source=replace_weblinks($source);
 	//$camelCaseLinks=read_camel_links($source);
 	//$altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
-	$altered_source=replace_camel_links($source);
+	$altered_source=replace_includes($source);
+	$altered_source=replace_camel_links($altered_source);
 	$altered_source=replace_anchors($altered_source);
 	$altered_source=replace_codes($altered_source);	
 	$altered_source=replace_headings($altered_source);
 	$altered_source=replace_lists($altered_source);
 	$altered_source=replace_formats($altered_source);
-	$altered_source=replace_includes($altered_source);
 	$altered_source=convert_tables($altered_source);
 	$altered_source.="\n".'[[Category:'.$_SESSION['current']['namespace'].']]';
 	$replace=array('%YELLOW%'=>'<font color="yellow">',
@@ -48,8 +48,17 @@ function convert_t2m($source){
 }
 
 function replace_camel_links($source){
-	$source=preg_replace('/([^A-Za-z0-9])([A-Za-z0-9]+)\.([A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)([^A-Za-z0-9])/',"$1[[$2:$3]]$4",$source); // Replace Namespace.CamelCase => [[Namespace:CamelCase]]
-	$source=preg_replace('/([^A-Za-z0-9:])([A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)([^A-Za-z0-9])/',"$1[[".$_SESSION['current']['namespace'].":$2]]$3",$source);
+	$source=preg_replace('/([^A-Za-z0-9:\[])([A-Za-z0-9]+)\.([A-Z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)([^A-Za-z0-9])/',"$1[[$2:$3|$3]]$4",$source); // Replace Namespace.CamelCase => [[Namespace:CamelCase]]
+	$source=preg_replace('/([^A-Za-z0-9|:\[])([A-Z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)([^A-Za-z0-9\}])/',"$1[[".$_SESSION['current']['namespace'].":$2|$2]]$3",$source);
+	//prefix:
+	// the | is to avoid converting [[Somelink|CamelCase]]
+	// the : is to avoid converting [[:SomeCaseCategory:Link]]
+	// the [ is to avoid converting [[SomeCategory:Link]]
+	//suffix:
+	// the } is to avoid converting {{SomeCategory:CamelCase}}
+	
+	
+	
 	return $source;
 }
 
@@ -233,7 +242,7 @@ function replace_formats($source){
 
 }
 
-function  replace_includes($source){
+/*function  replace_includes($source){
 	$key='%INCLUDE{';
 	$pos=strpos($source,$key);
 	while ($pos!==false){
@@ -245,7 +254,12 @@ function  replace_includes($source){
 		$pos=strpos($source,$key);
 	}
 	return $source;
+}*/
+
+function  replace_includes($source){
+	return preg_replace('/%INCLUDE\{"([^"]+)"\}%/',"{{:$1}}",$source);
 }
+
 
 function convert_tables($source){
 	$lines=explode("\n",$source);
