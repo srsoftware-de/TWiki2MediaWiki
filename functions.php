@@ -113,7 +113,7 @@ function source_code($url,$auth=null,$postData=null){
 function read_revisions(){
 	$url=$_SESSION['source']['url'].'/'.$_SESSION['current']['namespace'].'/'.$_SESSION['current']['page'];
 	$url=str_replace('view','rdiff',$url);
-	$source=source_code($url);
+	$source=source_code($url,$_SESSION['source']);
 
 
 	$parts=explode("rev=",$source);
