@@ -10,8 +10,9 @@ function convert_t2m($source){
 			'%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].']]');
 	$source=str_replace(array_keys($replace),$replace,$source);
 	$source=replace_weblinks($source);
-	$camelCaseLinks=read_camel_links($source);
-	$altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
+	//$camelCaseLinks=read_camel_links($source);
+	//$altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
+	$altered_source=replace_camel_links($source);
 	$altered_source=replace_anchors($altered_source);
 	$altered_source=replace_codes($altered_source);	
 	$altered_source=replace_headings($altered_source);
@@ -43,6 +44,12 @@ function convert_t2m($source){
 			'</verbatim>'=>'</pre>');
 	$altered_source=str_replace(array_keys($replace),$replace,$altered_source);
 	return $altered_source;
+}
+
+function replace_camel_links($source){
+	$source=preg_replace('/([^A-Za-z0-9])([A-Za-z0-9]+).([A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)([^A-Za-z0-9])/',"$1[[$2:$3]]$4",$source); // Replace Namespace.CamelCase => [[Namespace:CamelCase]]
+	$source=preg_replace('/([^A-Za-z0-9:])([A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)([^A-Za-z0-9])/',"$1[[".$_SESSION['current']['namespace'].":$2]]$3",$source);
+	return $source;
 }
 
 // replaces <a name="anchorname">some text</a> by <span id="anchorname">some text</span>

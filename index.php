@@ -21,6 +21,7 @@
       $bottom=t('This page is not existent. Thus, it can not be transferred!');
     } else {
       $media_wiki_code=convert_t2m($revision_code);
+      addLinks($media_wiki_code);
       $bottom=show_submit_form($media_wiki_code);
     }
   }
