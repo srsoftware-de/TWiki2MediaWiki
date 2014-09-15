@@ -13,13 +13,13 @@ function convert_t2m($source){
 	//$camelCaseLinks=read_camel_links($source);
 	//$altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
 	$altered_source=replace_includes($source);
+	$altered_source=convert_tables($altered_source);
 	$altered_source=replace_camel_links($altered_source);
 	$altered_source=replace_anchors($altered_source);
 	$altered_source=replace_codes($altered_source);	
 	$altered_source=replace_headings($altered_source);
 	$altered_source=replace_lists($altered_source);
 	$altered_source=replace_formats($altered_source);
-	$altered_source=convert_tables($altered_source);
 	$altered_source.="\n".'[[Category:'.$_SESSION['current']['namespace'].']]';
 	$replace=array('%YELLOW%'=>'<font color="yellow">',
 			'%ORANGE%'=>'<font color="orange">',
