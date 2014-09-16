@@ -234,7 +234,10 @@ function replace_formats($source){
 }*/
 
 function  replace_includes($source){
-	return preg_replace('/%INCLUDE\{"([^"]+)"\}%/',"{{:$1}}",$source);
+	$source=preg_replace('/%INCLUDE\{"([^"]+:[^"]+)"\}%/',"{{:$1}}",$source); // %INCLUDE{"Namespace:SomePage"}% => {{:Namespace:SomePage}}
+	$source=preg_replace('/%INCLUDE\{([^\}]+:[^\}]+)\}%/',"{{:$1}}",$source); // %INCLUDE{SomePage}% =>  {{:Namespace:SomePage}}
+	$source=preg_replace('/%INCLUDE\{"([^":]+)"\}%/',"{{:".$_SESSION['current']['namespace']."$1}}",$source); // %INCLUDE{"SomePage"}% => {{:Namespace:SomePage}}		
+	return preg_replace('/%INCLUDE\{([^\}]+)\}%/',"{{:".$_SESSION['current']['namespace']."$1}}",$source); // %INCLUDE{SomePage}% =>  {{:Namespace:SomePage}}
 }
 
 
