@@ -10,8 +10,6 @@ function convert_t2m($source){
 			'%WEB%'=>'[[:Category:'.$_SESSION['current']['namespace'].'|'.$_SESSION['current']['namespace'].']]');
 	$source=str_replace(array_keys($replace),$replace,$source);
 	$source=replace_weblinks($source);
-	//$camelCaseLinks=read_camel_links($source);
-	//$altered_source=str_replace(array_keys($camelCaseLinks),$camelCaseLinks,$source);
 	$altered_source=replace_includes($source);
 	$altered_source=convert_tables($altered_source);
 	$altered_source=replace_camel_links($altered_source);
@@ -126,8 +124,6 @@ function replace_weblinks($source){
 
 
 function replace_codes($source){
-	//$source=preg_replace("/([^ ])=/","$1</code>",$source);
-	//$source=preg_replace("/=([^ ])/","<code>$1",$source);
 	$source=preg_replace("/=([^ ].*[^ ])=/","<code>$1</code>",$source); // wirks well with Main:TWikiUsers	
 	$source=str_replace('<code></code>','',$source); // cleanup
 	return $source;
@@ -203,35 +199,11 @@ function replace_formats($source){
 	
 	$source=preg_replace('/_([A-Za-z0-9][^_]*)_/',"''$1''",$source); // _some text_ => ''some text''
 		
-
-//	$source=preg_replace("/\*([^\s*])/","'''$1",$source); // * followed by non-white-space
-//	$source=preg_replace("/([^\s*])\*/","$1'''",$source); // non-white-space followed by *
-
-//	$source=preg_replace("/__([^ ])/","'''''$1",$source);
-//	$source=preg_replace("/([^ ])__/","$1''''''",$source);
-
-//	$source=preg_replace("/_([^ ])/","''$1",$source);
-//	$source=preg_replace("/([^ ])_/","$1''",$source);
-
 	$source=str_replace('&lt;nop&gt;','',$source); // <nop>
 	$source=str_replace('%TOC%','__TOC__',$source); // %TOC%
 	return $source;
 
 }
-
-/*function  replace_includes($source){
-	$key='%INCLUDE{';
-	$pos=strpos($source,$key);
-	while ($pos!==false){
-		$end=strpos($source,'}%',$pos)+2;
-		$link=substr($source,$pos+9,$end-$pos-11);
-		$link=trim($link,'"');
-		addLink($link);
-		$source=substr($source,0,$pos).'{{:'.$link.'}}'.substr($source,$end);
-		$pos=strpos($source,$key);
-	}
-	return $source;
-}*/
 
 function  replace_includes($source){
 	$source=preg_replace('/%INCLUDE\{"([^"]+:[^"]+)"\}%/',"{{:$1}}",$source); // %INCLUDE{"Namespace:SomePage"}% => {{:Namespace:SomePage}}
