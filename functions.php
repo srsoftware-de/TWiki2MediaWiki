@@ -26,8 +26,7 @@ function addLinks($mediawiki_source){
 	$treffer=array();
 	preg_match_all("/\[\[[^\]]+\]\]/",$mediawiki_source,$treffer);
 	foreach ($treffer[0] as $num => $link){
-		$link=preg_replace('/\[\[:?([^\]]+)\]\]/',"$1",$link);
-		$link=preg_replace('/|.*/','',$link); 
+		$link=preg_replace('/\[\[:?([^|\]]+)(|[^\]])*\]\]/',"$1",$link);
 		if (strpos($link,'Category:')!==0){
 			addLink($link);				
 		}
